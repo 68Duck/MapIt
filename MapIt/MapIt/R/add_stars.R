@@ -53,7 +53,7 @@ build_star_layer <- function(df, data, width, height,
 #' Builds an individual star layer
 #'
 #' @param df A data frame containing the coordinates for positioning the
-#'  star rating layer.
+#'  star layer
 #' @param data A data frame with columns `x`, `y`, and `colours` which represent
 #' the positions and color of the stars (yellow for filled, grey for empty).
 #' @param width The width of the star layer

@@ -19,16 +19,8 @@ choropleth <- function(data, fill, legend_title) {
 #' @import ggplot2
 #' @import sf
 graph <- ggplot() + geom_sf(data=data, aes(fill = fill)) +
-    theme_void() + 
+    theme_void() +
     scale_color_gradient2(low = "red", high = "blue", mid = "white", midpoint = 0) 
 graph$labels$fill <- legend_title
 return(graph)
 }
-
-test <- ne_countries(scale=10, type="countries", continent = "africa")
-map <- choropleth(test, test$pop_rank, "Population rank")
-source("C:\\Users\\Joshu\\Documents\\MapIt\\MapIt\\MapIt\\R\\add_stars.R")
-# print(map)
-map <- map + add_stars(test, "pop_rank", 10, 10, 3)
-
-print(map)
