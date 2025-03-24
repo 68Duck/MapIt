@@ -14,13 +14,15 @@ choropleth <- function(data, fill, legend_title) {
 #' @return A `ggplot` object representing the choropleth map.
 #' 
 #' @examples
-#' choropleth(sf_data, fill = "population_density", legend_title = "Population Density")
+#' choropleth(sf_data, fill = "population_density",
+#'  legend_title = "Population Density")
 #' 
 #' @import ggplot2
 #' @import sf
-graph <- ggplot() + geom_sf(data=data, aes(fill = fill)) +
-    theme_void() +
-    scale_color_gradient2(low = "red", high = "blue", mid = "white", midpoint = 0) 
-graph$labels$fill <- legend_title
-return(graph)
+    graph <- ggplot() + geom_sf(data=data, aes(fill = fill)) +
+        theme_void() +
+        scale_color_gradient2(low = "red", high = "blue",
+        mid = "white", midpoint = 0) 
+    graph$labels$fill <- legend_title
+    graph
 }

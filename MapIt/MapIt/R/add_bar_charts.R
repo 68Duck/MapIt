@@ -26,6 +26,11 @@ add_bar_charts <- function(df, width, height, attributes,
 #' map <- map + add_bar_charts(df, width = 100,
 #'  height = 50, attributes = c("value1", "value2"))
 #'
+#' @import ggplot2
+#' @import rnaturalearth
+#' @import sf
+#' @import ggnewscale
+
   map_elements <- list()
 
   df_no_na <- df[apply(df[attributes], 1, function(row) all(!is.na(row))), ]

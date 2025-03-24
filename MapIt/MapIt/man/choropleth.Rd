@@ -20,6 +20,7 @@ A \code{ggplot} object representing the choropleth map.
 Generates a choropleth map using ggplot2
 }
 \examples{
-choropleth(sf_data, fill = "population_density", legend_title = "Population Density")
+choropleth(sf_data, fill = "population_density",
+ legend_title = "Population Density")
 
 }

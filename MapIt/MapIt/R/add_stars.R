@@ -29,6 +29,11 @@ add_stars <- function(df, attribute, width, height, star_size,
 #' map <- map + add_stars(df, attribute = "rating",
 #'  width = 100, height = 50, star_size = 10)
 #' 
+#' @import ggplot2
+#' @import rnaturalearth
+#' @import sf
+#' @import ggnewscale
+#' @import ggstar
   map_elements <- list()
   df <- df[!is.na(df[[attribute]]), ]
   max_value <- max(df[[attribute]], na.rm = TRUE)
@@ -74,6 +79,11 @@ build_star_layer <- function(df, data, width, height,
 #'  width = 100, height = 50, star_size = 10, label_x = "label_x",
 #'  label_y = "label_y")
 #' 
+#' @import ggplot2
+#' @import rnaturalearth
+#' @import sf
+#' @import ggnewscale
+#' @import ggstar
   points <- ggplot(data, aes(x = x, y = y, color = colours, fill = colours)) +
     geom_star(stat = "identity", size=star_size) +
     scale_fill_manual(values = c("yellow" = "yellow", "grey" = "grey")) +

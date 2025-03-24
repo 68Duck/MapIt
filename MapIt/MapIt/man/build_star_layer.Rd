@@ -8,7 +8,7 @@ build_star_layer(df, data, width, height, star_size, label_x, label_y)
 }
 \arguments{
 \item{df}{A data frame containing the coordinates for positioning the
-star rating layer.}
+star layer}
 
 \item{data}{A data frame with columns \code{x}, \code{y}, and \code{colours} which represent
 the positions and color of the stars (yellow for filled, grey for empty).}

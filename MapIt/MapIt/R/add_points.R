@@ -20,13 +20,16 @@ add_points <- function(data, x, y, attribute, legend_title) {
 #' plot <- ggplot() + add_points(df, x = "x", y = "y",
 #'  attribute = "attribute", legend_title = "Attribute")
 #'
+#' @import ggplot2
+#' @import dplyr
+#' 
     data <- data[!is.na(data[[attribute]]), ]
     data[[attribute]] <- as.numeric(data[[attribute]])
     list(
         new_scale("colour"),
         new_scale("size"),
         geom_point(aes_string(x = data[[x]], y = data[[y]],
-         size = data[[attribute]], colour=data[[attribute]])),
+            size = data[[attribute]], colour=data[[attribute]])),
         scale_size_continuous(range = c(1, 12)),
         scale_color_viridis_c(trans = "log"),
         labs("size" = legend_title),

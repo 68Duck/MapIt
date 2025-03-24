@@ -26,6 +26,9 @@ add_pie_charts <- function(data, x, y, attributes, legend_title, pie_scale) {
 #' map <- map + add_pie_charts(data, x = "x", y = "y",
 #'  attributes = c("A", "B"), legend_title = "Category", pie_scale = 0.1)
 #' 
+#' @import ggplot2
+#' @import scatterpie
+#' @import ggnewscale
   list(
     new_scale("fill"),
     geom_scatterpie(aes_string(x = x, y = y),
