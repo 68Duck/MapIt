@@ -5,7 +5,7 @@ library(ggnewscale)
 library(ggstar)
 
 add_stars <- function(df, attribute, width, height, star_size,
- label_x = "label_x", label_y = "label_y") {
+                      label_x = "label_x", label_y = "label_y") {
 #' Add Star Ratings to a ggplot object
 #'
 #' Generates a geom object which can be added to a ggplot object containing
@@ -54,7 +54,7 @@ add_stars <- function(df, attribute, width, height, star_size,
 
 
 build_star_layer <- function(df, data, width, height,
- star_size, label_x, label_y) {
+                             star_size, label_x, label_y) {
 #' Builds an individual star layer
 #'
 #' @param df A data frame containing the coordinates for positioning the
