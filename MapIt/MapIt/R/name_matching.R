@@ -59,10 +59,10 @@ get_country_number_with_levenshtein_distance <- function(country, x) {
 #' Returns the country number based off the csv file
 #'
 #' This function first checks if a cached `country_map` exists and uses it for
-#' fast lookup. If not, it will compute the mapping by calling 
+#' fast lookup. If not, it will compute the mapping by calling
 #' `create_country_map`.
-#' The function tries to match the input `country` with names in the map. 
-#' It also attempts to clean the country name by removing common 
+#' The function tries to match the input `country` with names in the map.
+#' It also attempts to clean the country name by removing common
 #' words like "and", "of", or "the".
 #' If a direct match isn't found, it uses the Levenshtein distance to search for
 #' a close match.
@@ -70,7 +70,7 @@ get_country_number_with_levenshtein_distance <- function(country, x) {
 #' @param country A string representing the country name to search for.
 #' @param x A numeric threshold for the Levenshtein distance.
 #'
-#' @return The row index of the closest matching country 
+#' @return The row index of the closest matching country
 #'          if found; otherwise, -1.
 #' @examples
 #' country_number <- get_country_number("germany", 3)

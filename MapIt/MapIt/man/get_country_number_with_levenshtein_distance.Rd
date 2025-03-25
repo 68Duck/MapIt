@@ -2,8 +2,8 @@
 % Please edit documentation in R/name_matching.R
 \name{get_country_number_with_levenshtein_distance}
 \alias{get_country_number_with_levenshtein_distance}
-\title{Returns the row index of a country from the CSV file based on the
-Levenshtein distance.}
+\title{Returns the country number based off the levenstein distance being
+less than x}
 \usage{
 get_country_number_with_levenshtein_distance(country, x)
 }
@@ -13,13 +13,14 @@ get_country_number_with_levenshtein_distance(country, x)
 \item{x}{A numeric threshold for the Levenshtein distance.}
 }
 \value{
-The row index of the closest matching country if found; otherwise, -1.
+The row index of the closest matching country
+if found; otherwise, -1.
 }
 \description{
 This function searches for the country in the CSV data by calculating the
 Levenshtein distance between the input \code{country} and the country names in
 the data. If the distance is less than a threshold \code{x}, it returns the
-index of the matching row.
+index of the matching row which is the country number.
 }
 \examples{
 country_number <- get_country_number_with_levenshtein_distance("germany", 3)
