@@ -3,7 +3,6 @@ library(scatterpie)
 library(ggnewscale)
 
 
-add_pie_charts <- function(data, x, y, attributes, legend_title, pie_scale) {
 #' Add Pie Charts to a Plot
 #'
 #' Generates a pie chart layer for a ggplot object
@@ -29,6 +28,7 @@ add_pie_charts <- function(data, x, y, attributes, legend_title, pie_scale) {
 #' @import ggplot2
 #' @import scatterpie
 #' @import ggnewscale
+add_pie_charts <- function(data, x, y, attributes, legend_title, pie_scale) {
   list(
     new_scale("fill"),
     geom_scatterpie(aes_string(x = x, y = y),

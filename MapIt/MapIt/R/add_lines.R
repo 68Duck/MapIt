@@ -5,7 +5,6 @@ library(dplyr)
 library(ggplot2)
 
 
-find_closest_rects <- function(data, small_country_area, width, height) {
 #' Finds the closest rectangle in free space for a small countries
 #' information to be sotred in.
 #'
@@ -28,6 +27,7 @@ find_closest_rects <- function(data, small_country_area, width, height) {
 #' @import sf
 #' @import dplyr
 #' @import purrr
+find_closest_rects <- function(data, small_country_area, width, height) {
 
   country_bboxes <- data %>%
     mutate(
@@ -128,10 +128,8 @@ find_closest_rects <- function(data, small_country_area, width, height) {
   }
 
   closest_rectangles_df
-} 
+}
 
-modify_label_positions <- function(data, small_country_area, width, height,
-                                   label_x = "label_x", label_y = "label_y") {
 #' Modifies Label Positions Based on the closest rectangles if the countries
 #' area is too small
 #'
@@ -157,6 +155,8 @@ modify_label_positions <- function(data, small_country_area, width, height,
 #' @import ggplot2
 #' @import sf
 #' @import dplyr
+modify_label_positions <- function(data, small_country_area, width, height,
+                                   label_x = "label_x", label_y = "label_y") {
 
   df <- find_closest_rects(data = data, small_country_area = small_country_area,
                            width = width, height = height)
@@ -164,16 +164,15 @@ modify_label_positions <- function(data, small_country_area, width, height,
   new_data <- data %>%
     left_join(df, by = c("name" = "country_name")) %>%
     mutate(
-      label_x = ifelse(!is.na(df$rectangle_point.X),
-                       df$rectangle_point.X, label_x),
-      label_y = ifelse(!is.na(df$rectangle_point.Y),
-                       df$rectangle_point.Y, label_y)
+      label_x = ifelse(!is.na(rectangle_point.X),
+                       rectangle_point.X, label_x),
+      label_y = ifelse(!is.na(rectangle_point.Y),
+                       rectangle_point.Y, label_y)
     )
   new_data
 }
 
 
-add_lines_to_labels <- function(data, width, height) {
 #' Adds lines connecting small countries to their closest rectangles
 #' 
 #'
@@ -188,13 +187,16 @@ add_lines_to_labels <- function(data, width, height) {
 #'
 #' @examples
 #' # Assuming `world_data` is a valid `sf` object containing world map data:
+#' world_data <- modify_label_positions(world_data,
+#'                                      small_country_area = 100000,
+#'                                      width = 1, height = 1) +
 #' plot_with_lines <- ggplot() +
 #'   geom_sf(data = world_data) +
-#'   add_lines_to_labels(small_country_area = 100000,
-#'                       width = 1, height = 1, data = world_data)
+#'   add_lines_to_labels(data = world_data, width = 1, height = 1)
 #'
 #' @import ggplot2
 #' @import sf
+add_lines_to_labels <- function(data, width, height) {
 
   geom_segment(data = data, aes(x = data$country_point.X,
                                 y = data$country_point.Y,

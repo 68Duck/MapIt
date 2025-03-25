@@ -4,8 +4,6 @@ library(sf)
 library(ggnewscale)
 library(ggstar)
 
-add_stars <- function(df, attribute, width, height, star_size,
-                      label_x = "label_x", label_y = "label_y") {
 #' Add Star Ratings to a ggplot object
 #'
 #' Generates a geom object which can be added to a ggplot object containing
@@ -34,6 +32,8 @@ add_stars <- function(df, attribute, width, height, star_size,
 #' @import sf
 #' @import ggnewscale
 #' @import ggstar
+add_stars <- function(df, attribute, width, height, star_size,
+                      label_x = "label_x", label_y = "label_y") {
   map_elements <- list()
   df <- df[!is.na(df[[attribute]]), ]
   max_value <- max(df[[attribute]], na.rm = TRUE)
@@ -53,8 +53,6 @@ add_stars <- function(df, attribute, width, height, star_size,
 }
 
 
-build_star_layer <- function(df, data, width, height,
-                             star_size, label_x, label_y) {
 #' Builds an individual star layer
 #'
 #' @param df A data frame containing the coordinates for positioning the
@@ -84,6 +82,8 @@ build_star_layer <- function(df, data, width, height,
 #' @import sf
 #' @import ggnewscale
 #' @import ggstar
+build_star_layer <- function(df, data, width, height,
+                             star_size, label_x, label_y) {
   points <- ggplot(data, aes(x = x, y = y, color = colours, fill = colours)) +
     geom_star(stat = "identity", size=star_size) +
     scale_fill_manual(values = c("yellow" = "yellow", "grey" = "grey")) +

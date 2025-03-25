@@ -1,7 +1,6 @@
 library(ggplot2)
 library(dplyr)
 
-add_points <- function(data, x, y, attribute, legend_title) {
 #' Generates a point layer based off an attribute
 #'
 #' @param data A data frame containing the data to be plotted.
@@ -22,17 +21,19 @@ add_points <- function(data, x, y, attribute, legend_title) {
 #'
 #' @import ggplot2
 #' @import dplyr
-#' 
-    data <- data[!is.na(data[[attribute]]), ]
-    data[[attribute]] <- as.numeric(data[[attribute]])
-    list(
-        new_scale("colour"),
-        new_scale("size"),
-        geom_point(aes_string(x = data[[x]], y = data[[y]],
-            size = data[[attribute]], colour=data[[attribute]])),
-        scale_size_continuous(range = c(1, 12)),
-        scale_color_viridis_c(trans = "log"),
-        labs("size" = legend_title),
-        labs("colour" = legend_title)
-    )
+#'
+add_points <- function(data, x, y, attribute, legend_title) {
+  data <- data[!is.na(data[[attribute]]), ]
+  data[[attribute]] <- as.numeric(data[[attribute]])
+  list(
+    new_scale("colour"),
+    new_scale("size"),
+    geom_point(aes_string(x = data[[x]], y = data[[y]],
+                          size = data[[attribute]],
+                          colour = data[[attribute]])),
+    scale_size_continuous(range = c(1, 12)),
+    scale_color_viridis_c(trans = "log"),
+    labs("size" = legend_title),
+    labs("colour" = legend_title)
+  )
 }

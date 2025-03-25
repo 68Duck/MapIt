@@ -3,8 +3,6 @@ library(rnaturalearth)
 library(sf)
 library(ggnewscale)
 
-add_bar_charts <- function(df, width, height, attributes,
-                           label_x = "label_x", label_y = "label_y") {
 #' Add a Bar Chart Layer to a ggplot layer
 #'
 #'
@@ -30,6 +28,8 @@ add_bar_charts <- function(df, width, height, attributes,
 #' @import rnaturalearth
 #' @import sf
 #' @import ggnewscale
+add_bar_charts <- function(df, width, height, attributes,
+                           label_x = "label_x", label_y = "label_y") {
 
   map_elements <- list()
 
@@ -42,7 +42,6 @@ add_bar_charts <- function(df, width, height, attributes,
   map_elements
 }
 
-build_layer <- function(df, width, height, attributes, label_x, label_y) {
 #' Builds a bar chart
 #'
 #' @param df A data frame containing the coordinates for positioning the
@@ -70,6 +69,7 @@ build_layer <- function(df, width, height, attributes, label_x, label_y) {
 #'                          label_y = "label_y")
 #'
 #'
+build_layer <- function(df, width, height, attributes, label_x, label_y) {
   data <- data.frame(
     Category = attributes,
     Value = sapply(attributes, function(attr) df[[attr]])

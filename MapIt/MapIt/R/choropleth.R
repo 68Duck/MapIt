@@ -2,7 +2,6 @@ library(ggplot2)
 library(rnaturalearth)
 library(scales)
 
-choropleth <- function(data, fill, legend_title) {
 #' Create a Choropleth Map
 #' 
 #' Generates a choropleth map using ggplot2
@@ -19,6 +18,7 @@ choropleth <- function(data, fill, legend_title) {
 #' 
 #' @import ggplot2
 #' @import sf
+choropleth <- function(data, fill, legend_title) {
     graph <- ggplot() + geom_sf(data=data, aes(fill = fill)) +
         theme_void() +
         scale_color_gradient2(low = "red", high = "blue",
