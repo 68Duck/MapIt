@@ -3,7 +3,27 @@ library(rnaturalearthhires)
 library(sf)
 library(dplyr)
 library(ggplot2)
+library(clue)
 
+#' Calculates the Euclidean distance between two points.
+#'
+#' This function computes the Euclidean distance between two points.
+#' The points are represented as coordinate pairs (longitude, latitude).
+#'
+#' @param point1 A vector representing the first point (longitude, latitude).
+#' @param point2 A vector representing the second point (longitude, latitude).
+#'
+#' @return The Euclidean distance between the two points
+#' @examples
+#' point1 <- c(-75, 40)
+#' point2 <- c(-80, 45)
+#' distance <- euclidean_distance(point1, point2)
+#' print(distance)
+euclidean_distance <- function(point1, point2) {
+  lon_diff <- point1[1] - point2[1]
+  lat_diff <- point1[2] - point2[2]
+  sqrt(lon_diff^2 + lat_diff^2)
+}
 
 #' Finds the closest rectangle in free space for a small countries
 #' information to be sotred in.
@@ -28,7 +48,6 @@ library(ggplot2)
 #' @import dplyr
 #' @import purrr
 find_closest_rects <- function(data, small_country_area, width, height) {
-
   country_bboxes <- data %>%
     mutate(
       bbox = purrr::map(geometry, st_bbox),
@@ -39,10 +58,8 @@ find_closest_rects <- function(data, small_country_area, width, height) {
     ) %>%
     select(name, xmin, ymin, xmax, ymax)
 
-
   country_bboxes$area <- (country_bboxes$xmax - country_bboxes$xmin) *
     (country_bboxes$ymax - country_bboxes$ymin)
-
 
   bounding_box <- st_bbox(data)
   bbox_polygon <- st_as_sfc(bounding_box)
@@ -69,21 +86,36 @@ find_closest_rects <- function(data, small_country_area, width, height) {
       rectangles$xmin[i], rectangles$ymin[i]
     ), ncol = 2, byrow = TRUE)))
   }))
-
+  
   rectangles_sf <- st_set_crs(rectangles_sf, st_crs(data))
-  rectangles_intersects_world <- st_intersects(rectangles_sf,
-                                               world_polygon, sparse = FALSE)
+  
+  rectangles_intersects_world <- st_intersects(rectangles_sf, world_polygon,
+                                               sparse = FALSE)
   valid_rectangles_sf <- rectangles_sf[!apply(rectangles_intersects_world,
                                               1, any)]
   rectangles_centroids <- st_centroid(valid_rectangles_sf)
-
-  euclidean_distance <- function(point1, point2) {
-    lon_diff <- point1[1] - point2[1]
-    lat_diff <- point1[2] - point2[2]
-    sqrt(lon_diff^2 + lat_diff^2)
-  }
+  rectangles_centroids <- st_set_crs(rectangles_centroids, st_crs(data))
 
   small_countries <- country_bboxes[country_bboxes$area < small_country_area, ]
+
+  distances_matrix <- matrix(0, nrow(small_countries),
+                             length(rectangles_centroids))
+
+  for (i in 1:nrow(small_countries)) {
+    selected_country <- small_countries[i, ]
+    selected_country_centroid <- st_centroid(selected_country)
+    selected_country_centroid <- st_set_crs(selected_country_centroid,
+                                            st_crs(data))
+    country_point <- st_coordinates(selected_country_centroid)
+
+    for (j in 1:length(rectangles_centroids)) {
+      rect_point <- st_coordinates(rectangles_centroids[j])
+      distance <- euclidean_distance(rect_point, country_point)
+      distances_matrix[i, j] <- distance
+    }
+  }
+
+  optimal_assignment <- solve_LSAP(distances_matrix)
 
   closest_rectangles_df <- data.frame(
     country_name = character(),
@@ -96,22 +128,11 @@ find_closest_rects <- function(data, small_country_area, width, height) {
   for (i in 1:nrow(small_countries)) {
     selected_country <- small_countries[i, ]
     selected_country_centroid <- st_centroid(selected_country)
-    rectangles_centroids <- st_set_crs(rectangles_centroids, st_crs(data))
-    selected_country_centroid <- st_set_crs(
-      selected_country_centroid, st_crs(data)
-    )
-    distances_df <- data.frame()
+    selected_country_centroid <- st_set_crs(selected_country_centroid,
+                                            st_crs(data))
     country_point <- st_coordinates(selected_country_centroid)
 
-    for (i in 1:length(rectangles_centroids)) {
-      rect_point <- st_coordinates(rectangles_centroids[i])
-      distance <- euclidean_distance(rect_point, country_point)
-      distances_df <- rbind(
-        distances_df, data.frame(rectangle_id = i, distance = distance)
-      )
-    }
-
-    closest_rectangle_index <- which.min(distances_df$distance)
+    closest_rectangle_index <- optimal_assignment[i]
     closest_rectangle <- valid_rectangles_sf[closest_rectangle_index]
     closest_rectangle_centroid <- st_centroid(closest_rectangle)
     closest_rectangle_point <- st_coordinates(closest_rectangle_centroid)
@@ -122,13 +143,10 @@ find_closest_rects <- function(data, small_country_area, width, height) {
       closest_rectangle_sf = closest_rectangle,
       rectangle_point = closest_rectangle_point
     ))
-
-    valid_rectangles_sf <- valid_rectangles_sf[-closest_rectangle_index]
-    rectangles_centroids <- rectangles_centroids[-closest_rectangle_index]
   }
-
   closest_rectangles_df
 }
+
 
 #' Modifies Label Positions Based on the closest rectangles if the countries
 #' area is too small
@@ -174,7 +192,7 @@ modify_label_positions <- function(data, small_country_area, width, height,
 
 
 #' Adds lines connecting small countries to their closest rectangles
-#' 
+#'
 #'
 #' @param width The width of the free space the small countries
 #'              should be assigned
