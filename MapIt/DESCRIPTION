@@ -14,4 +14,8 @@ Imports:
     sf,
     purrr,
     here,
-    scatterpie
+    scatterpie,
+    clue,
+    ggnewscale,
+    ggstar,
+    rnaturalearth
