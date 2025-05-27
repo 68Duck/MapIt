@@ -1,11 +1,11 @@
 library(rnaturalearth)
 library(rvest)
 library(here)
-source(here("MapIt/MapIt/R/add_lines.R"))
-source(here("MapIt/MapIt/R/add_bar_charts.R"))
-source(here("MapIt/MapIt/R/choropleth.R"))
-source(here("MapIt/MapIt/R/add_pie_charts.R"))
-source(here("MapIt/MapIt/R/merge_data.R"))
+source(here("R/add_lines.R"))
+source(here("R/add_bar_charts.R"))
+source(here("R/choropleth.R"))
+source(here("R/add_pie_charts.R"))
+source(here("R/merge_data.R"))
 
 
 url <-

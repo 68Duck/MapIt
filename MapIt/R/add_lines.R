@@ -1,5 +1,4 @@
 library(rnaturalearth)
-library(rnaturalearthhires)
 library(sf)
 library(dplyr)
 library(ggplot2)

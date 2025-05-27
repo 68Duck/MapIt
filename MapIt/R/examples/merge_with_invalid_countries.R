@@ -2,7 +2,7 @@ library(here)
 library(rnaturalearth)
 library(rvest)
 
-source(here("MapIt/MapIt/R/merge_data.R"))
+source(here("R/merge_data.R"))
 
 url <-
   "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition"

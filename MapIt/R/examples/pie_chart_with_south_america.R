@@ -1,8 +1,8 @@
 library(here)
 library(rnaturalearth)
-source(here("MapIt/R/add_lines.R"))
-source(here("MapIt/R/add_pie_charts.R"))
-source(here("MapIt/R/choropleth.R"))
+source(here("R/add_lines.R"))
+source(here("R/add_pie_charts.R"))
+source(here("R/choropleth.R"))
 
 data <- ne_countries(returnclass = "sf", scale = 10,
                      continent = "south america")

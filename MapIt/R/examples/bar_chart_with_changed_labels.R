@@ -1,8 +1,8 @@
 library(here)
 library(rnaturalearth)
-source(here("MapIt/MapIt/R/add_lines.R"))
-source(here("MapIt/MapIt/R/add_bar_charts.R"))
-source(here("MapIt/MapIt/R/choropleth.R"))
+source(here("R/add_lines.R"))
+source(here("R/add_bar_charts.R"))
+source(here("R/choropleth.R"))
 
 data <- ne_countries(returnclass = "sf", scale = 10, continent = "africa")
 
