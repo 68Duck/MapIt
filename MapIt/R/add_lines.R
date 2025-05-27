@@ -173,6 +173,7 @@ find_closest_rects <- function(data, small_country_area, width, height) {
 #' @import ggplot2
 #' @import sf
 #' @import dplyr
+#' @export
 modify_label_positions <- function(data, small_country_area, width, height,
                                    label_x = "label_x", label_y = "label_y") {
 
@@ -214,6 +215,7 @@ modify_label_positions <- function(data, small_country_area, width, height,
 #'
 #' @import ggplot2
 #' @import sf
+#' @export
 add_lines_to_labels <- function(data, width, height) {
 
   geom_segment(data = data, aes(x = data$country_point.X,

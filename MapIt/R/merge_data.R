@@ -19,6 +19,7 @@ source(here("R/name_matching.R"))
 #' @examples
 #' merged_data <- merge_data(country_data, auxillary_data,
 #'                           "country", "country_name")
+#' @export
 merge_data <- function(country_data, auxillary_data,
                        country_name, auxillary_country_name) {
   data <- merge(country_data, auxillary_data,
@@ -41,6 +42,7 @@ merge_data <- function(country_data, auxillary_data,
 #' @examples
 #' merged_data <- merge_data_with_country_matching(country_data, auxillary_data,
 #'                                                 "country", "country_name")
+#' @export
 merge_data_with_country_matching <- function(country_data, auxillary_data,
                                              country_name,
                                              auxillary_country_name) {

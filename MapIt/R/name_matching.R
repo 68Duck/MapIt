@@ -37,6 +37,7 @@ create_country_map <- function() {
 #'         if found; otherwise, -1.
 #' @examples
 #' country_number <- get_country_number_with_levenshtein_distance("germany", 3)
+#' @export
 get_country_number_with_levenshtein_distance <- function(country, x) {
   data <- csv_data
   for (i in 1:nrow(data)) {
@@ -75,6 +76,7 @@ get_country_number_with_levenshtein_distance <- function(country, x) {
 #'          if found; otherwise, -1.
 #' @examples
 #' country_number <- get_country_number("germany", 3)
+#' @export
 get_country_number <- function(country, x) {
   number <- get_country_from_map(country = country)
   if (number != -1) {
@@ -136,6 +138,7 @@ get_country_number_basic <- function(country) {
 #' @return TRUE if the Levenshtein distance is less than `x`; otherwise, FALSE.
 #' @examples
 #' is_closer <- levenshtein_distance_lesser_than("germany", "germnay", 3)
+#' @export
 levenshtein_distance_lesser_than <- function(str1, str2, x) {
   dist <- stringdist(str1, str2, method = "lv")
   dist < x
@@ -176,6 +179,7 @@ abbreviated <- function(str1, str2) {
 #'  Levenshtein distance; otherwise, FALSE.
 #' @examples
 #' are_same <- compare_nearest_country("germany", "germnay", 3)
+#' @export
 compare_nearest_country <- function(country1, country2, max_distance) {
   number1 <- get_country_number_with_levenshtein_distance(country1,
                                                           max_distance)
@@ -198,6 +202,7 @@ compare_nearest_country <- function(country1, country2, max_distance) {
 #' country_indexes <- get_country_indexes_from_dataframe(
 #'  countries = c("Germany", "France"),
 #'  data_frame_countries = csv_data$V1, max_distance = 3)
+#' @export
 get_country_indexes_from_dataframe <- function(countries, data_frame_countries,
                                                max_distance) {
   numbers <- map(countries,

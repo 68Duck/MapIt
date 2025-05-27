@@ -32,6 +32,7 @@ library(ggstar)
 #' @import sf
 #' @import ggnewscale
 #' @import ggstar
+#' @export
 add_stars <- function(df, attribute, width, height, star_size,
                       label_x = "label_x", label_y = "label_y") {
   map_elements <- list()

@@ -21,7 +21,7 @@ library(dplyr)
 #'
 #' @import ggplot2
 #' @import dplyr
-#'
+#' @export
 add_points <- function(data, x, y, attribute, legend_title) {
   data <- data[!is.na(data[[attribute]]), ]
   data[[attribute]] <- as.numeric(data[[attribute]])
