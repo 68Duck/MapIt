@@ -1,6 +1,6 @@
 Package: MapIt
 Title: Tools to Support the Easy Visualisation of Data as Maps
-Version: 0.0.1.1
+Version: 0.0.1.2
 Authors@R: 
     person("Joshua", "Henry", , "josh@68duck.co.uk", role = c("aut", "cre"))
 Description: Provides a suite of tools to allow the easier visualisation of maps using ggplot2 
