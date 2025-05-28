@@ -18,4 +18,5 @@ Imports:
     clue,
     ggnewscale,
     ggstar,
-    rnaturalearth
+    rnaturalearth,
+    stringdist

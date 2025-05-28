@@ -86,9 +86,9 @@ find_closest_rects <- function(data, small_country_area, width, height) {
       rectangles$xmin[i], rectangles$ymin[i]
     ), ncol = 2, byrow = TRUE)))
   }))
-  
+
   rectangles_sf <- st_set_crs(rectangles_sf, st_crs(data))
-  
+
   rectangles_intersects_world <- st_intersects(rectangles_sf, world_polygon,
                                                sparse = FALSE)
   valid_rectangles_sf <- rectangles_sf[!apply(rectangles_intersects_world,
@@ -113,6 +113,15 @@ find_closest_rects <- function(data, small_country_area, width, height) {
       distance <- euclidean_distance(rect_point, country_point)
       distances_matrix[i, j] <- distance
     }
+  }
+
+  # optimal_assignment <- solve_LSAP(distances_matrix)
+  n_countries <- nrow(distances_matrix)
+  n_rects <- ncol(distances_matrix)
+
+  if (n_countries > n_rects) {
+    return(NULL)
+    # stop("Not enough valid rectangles for the number of small countries. Try increasing width/height.")
   }
 
   optimal_assignment <- solve_LSAP(distances_matrix)

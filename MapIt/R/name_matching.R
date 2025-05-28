@@ -7,6 +7,7 @@ csv_data <<- read.csv(here("countryNames.csv"), header = FALSE)
 #' Creates a mapping from country names to numbers
 #'
 #' @return A map of country names to numbers
+#' @import stringdist
 #' @examples
 #' country_map <- create_country_map()
 create_country_map <- function() {

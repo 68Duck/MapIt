@@ -1,5 +1,3 @@
-library(rnaturalearth)
-
 library(here)
 library(rnaturalearth)
 source(here("R/add_lines.R"))
