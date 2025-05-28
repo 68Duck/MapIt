@@ -19,4 +19,5 @@ Imports:
     ggnewscale,
     ggstar,
     rnaturalearth,
-    stringdist
+    stringdist,
+    scales

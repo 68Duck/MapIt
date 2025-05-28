@@ -18,6 +18,7 @@ library(scales)
 #' 
 #' @import ggplot2
 #' @import sf
+#' @import scales
 #' @export
 choropleth <- function(data, fill, legend_title) {
     graph <- ggplot() + geom_sf(data=data, aes(fill = fill)) +
