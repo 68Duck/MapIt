@@ -29,13 +29,17 @@ library(ggnewscale)
 #' @import scatterpie
 #' @import ggnewscale
 #' @export
-add_pie_charts <- function(data, x, y, attributes, legend_title, pie_scale) {
-  list(
+add_pie_charts <- function(data, x, y, attributes, legend_title = NULL, pie_scale = 1) {
+  layers <- list(
     new_scale("fill"),
     geom_scatterpie(aes_string(x = x, y = y),
                      data = as.data.frame(data),
-                     cols = attributes, 
+                     cols = attributes,
                      pie_scale = pie_scale),
-    coord_sf(),
-    labs("fill" = legend_title))
+    coord_sf())
+  if (!is.null(legend_title)) {
+    layers <- c(layers, labs(fill = legend_title))
+  }
+  layers
+
 }

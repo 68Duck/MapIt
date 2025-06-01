@@ -59,6 +59,21 @@ merge_data_with_country_matching <- function(country_data, auxillary_data,
   data
 }
 
+#' Merges two datasets based on country names, using name matching,
+#' and prompts user input if the countries cannot be allocated automatically.
+#'
+#' @param country_data A data frame containing the country data.
+#' @param auxillary_data A data frame containing the auxiliary data to merge.
+#' @param country_name A string specifying the column name in `country_data`
+#'                     that contains the country names.
+#' @param auxillary_country_name A string specifying the column name in
+#'                              `auxillary_data` that contains the country names
+#'
+#' @return An `sf` data frame containing the merged data.
+#' @examples
+#' merged_data <- merge_data_with_ui(country_data, auxillary_data,
+#'                                   "country", "country_name")
+#' @export
 merge_data_with_ui <- function(country_data, auxillary_data,
                                country_name,
                                auxillary_country_name) {
@@ -69,87 +84,64 @@ merge_data_with_ui <- function(country_data, auxillary_data,
     apply(auxillary_data, 1,
           function(row) get_country_number_basic(row[auxillary_country_name]))
 
-  invalid_countries <- list()
+  country_data <- run_country_matching_ui(country_data, country_name)
+  auxillary_data <- run_country_matching_ui(auxillary_data,
+                                            auxillary_country_name)
 
-  for (i in 1:nrow(country_data)) {
-    if (country_data$country_number[i] == -1) {
-      invalid_countries[[length(invalid_countries) + 1]] <-
-        country_data[[country_name]][i]
-    }
-  }
-
-  print(invalid_countries)
-
-  if (length(invalid_countries) > 0) {
-    run_country_matching_ui(invalid_countries)
-  } else {
-    data <- merge(country_data, auxillary_data,
-                  by = "country_number", all.x = TRUE)
-    data <- st_as_sf(data)
-    data
-  }
-
+  data <- merge(country_data, auxillary_data,
+                by = "country_number", all.x = TRUE)
+  data <- st_as_sf(data)
+  data
 }
 
-# run_country_matching_ui <- function(invalid_countries) {
-
-# }
-
-
-
-# run_country_matching_ui <- function(invalid_countries) {
-#   print("test")
-#   # Define the UI for the Shiny app
-#   ui <- fluidPage(
-#     titlePanel("Assign Country Numbers to Invalid Countries"),
-
-#     sidebarLayout(
-#       sidebarPanel(
-#         h3("Invalid Countries"),
-#         # Create inputs for each invalid country
-#         uiOutput("country_inputs")  # Dynamic UI for country inputs
-#       ),
-
-#       mainPanel(
-#         actionButton("submit", "Submit Country Numbers")  # Button to submit
-#       )
-#     )
-#   )
-
-#   # Define the server logic
-#   server <- function(input, output, session) {
-    
-#     # Dynamically generate input fields for each invalid country
-#     output$country_inputs <- renderUI({
-#       # Create a list of numeric inputs for each invalid country
-#       lapply(seq_along(invalid_countries), function(i) {
-#         tagList(
-#           textOutput(paste("country_name", i)),
-#           numericInput(paste("country_number", i), 
-#                        label = paste("Assign a country number to", invalid_countries[i]), 
-#                        value = NA, 
-#                        min = -1)
-#         )
-#       })
-#     })
-    
-#     # Store country numbers when submit button is clicked
-#     observeEvent(input$submit, {
-#       # Create a list to store assigned country numbers
-#       assigned_numbers <- sapply(seq_along(invalid_countries), function(i) {
-#         input[[paste("country_number", i)]]
-#       })
-      
-#       # Print assigned country numbers (you can replace this with actual logic)
-#       print(data.frame(country = invalid_countries, assigned_country_number = assigned_numbers))
-      
-#       # You can perform any additional action here (e.g., store results in a database)
-#     })
-#   }
-
-#   # Run the Shiny app
-#   shinyApp(ui = ui, server = server)
-# }
+#' Iterates through each country and checks whether it has been allocated
+#' a number automatically. If not, it prompts the user to input a name or
+#' whether the country should be removed.
+#'
+#' @param country_data A data frame containing the country data.
+#' @param country_name A string specifying the column name in `country_data`
+#'                     that contains the country names.
+#'
+#' @return An `sf` data frame containing new country numbers
+#' @examples
+#' country_data <- run_country_matching_ui(country_data, "country")
+run_country_matching_ui <- function(country_data, country_name) {
+  used_country_numbers <- country_data$country_number
+  countries_to_remove <- c()
+  for (i in 1:nrow(country_data)) {
+    country_name_value <- country_data[i, country_name]
+    country_number <- country_data[["country_number"]][i]
+    remove_country <- FALSE
+    while (country_number == -1) {
+      new_country_name <-
+        readline(prompt = paste(
+                                "Please enter the country name for: ",
+                                country_name_value,
+                                " If you would like to delete this
+                                country please enter -1"))
+      if (new_country_name == -1 || new_country_name == "") {
+        countries_to_remove <- c(countries_to_remove, i)
+        remove_country <- TRUE
+        break
+      }
+      country_number <- get_country_number_basic(new_country_name)
+      if (country_number == -1) {
+        print(paste("The country: ", new_country_name,
+                    " is not a valid country. Please try again."))
+      } else if (country_number %in% country_data$country_number) {
+        print(paste("The country: ", new_country_name,
+                    " is already in the data. Please pick a different country"))
+        country_number <- -1
+      }
+    }
+    if (!remove_country) {
+      used_country_numbers <- c(used_country_numbers, country_number)
+      country_data[i, "country_number"] <- country_number
+    }
+  }
+  country_data <- country_data[-countries_to_remove, ]
+  country_data
+}
 
 
 #' Converts specified columns to numeric values after removing

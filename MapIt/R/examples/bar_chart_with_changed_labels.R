@@ -13,7 +13,7 @@ small_country_area <- 15
 data <- modify_label_positions(data = data,
                                small_country_area = small_country_area,
                                width = width, height = height)
-map <- choropleth(data = data, fill = data$pop_rank,
+map <- choropleth(data = data, fill = "pop_rank",
                   legend_title = "Population rank") +
   add_lines_to_labels(data = data, width = width, height = height) +
   add_bar_charts(df = data, width = width, height = height,

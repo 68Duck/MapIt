@@ -20,11 +20,13 @@ library(scales)
 #' @import sf
 #' @import scales
 #' @export
-choropleth <- function(data, fill, legend_title) {
-    graph <- ggplot() + geom_sf(data=data, aes(fill = fill)) +
+choropleth <- function(data, fill, legend_title = NULL) {
+    graph <- ggplot() + geom_sf(data=data, aes(fill = {{fill}})) +
         theme_void() +
         scale_color_gradient2(low = "red", high = "blue",
-        mid = "white", midpoint = 0) 
-    graph$labels$fill <- legend_title
+        mid = "white", midpoint = 0)
+    if (!is.null(legend_title)) {
+        graph$labels$fill <- legend_title
+    }
     graph
 }
