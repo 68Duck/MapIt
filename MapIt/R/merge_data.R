@@ -22,8 +22,16 @@ source(here("R/name_matching.R"))
 #' @export
 merge_data <- function(country_data, auxillary_data,
                        country_name, auxillary_country_name) {
+  original_countries <- country_data[[country_name]]
   data <- merge(country_data, auxillary_data,
                 by.x = country_name, by.y = auxillary_country_name)
+  merged_countries <- data[[country_name]]
+  missing_countries <- setdiff(original_countries, merged_countries)
+  if (length(missing_countries) > 0) {
+    warning(paste("Not all countries were found in the auxilarry data. 
+      The following countries were not merged: ",
+                  paste(missing_countries, collapse = ", ")))
+  }
   data <- st_as_sf(data)
   data
 }
