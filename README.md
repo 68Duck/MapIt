@@ -1,6 +1,6 @@
 # MapIt
 
-**MapIt** is an R library designed to facilitate teh simple createion of map, with allowing for control of small details
+**MapIt** is an R library designed to facilitate the simple creation of maps, with allowing for control of small details.
 
 ## Installation
 
