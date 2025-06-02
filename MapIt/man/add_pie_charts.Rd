@@ -4,7 +4,7 @@
 \alias{add_pie_charts}
 \title{Add Pie Charts to a Plot}
 \usage{
-add_pie_charts(data, x, y, attributes, legend_title, pie_scale)
+add_pie_charts(data, x, y, attributes, legend_title = NULL, pie_scale = 1)
 }
 \arguments{
 \item{data}{A data frame containing the data to be plotted.}

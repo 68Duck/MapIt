@@ -21,8 +21,6 @@ print(gdp_data[["Country/Economy"]])
 data <- merge_data(country_data, gdp_data,
                    "name", "Country/Economy")
 
-data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
-                                          "Service (%)"), c("%"))
 
 data$`Total GDP (US$MM)` <- as.numeric(gsub(",", "", data$`Total GDP (US$MM)`))
 

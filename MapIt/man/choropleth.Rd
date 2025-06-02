@@ -4,10 +4,11 @@
 \alias{choropleth}
 \title{Create a Choropleth Map}
 \usage{
-choropleth(data, fill, legend_title)
+choropleth(data, fill, legend_title = NULL)
 }
 \arguments{
-\item{data}{A \code{sf} (simple features) object containing the data to be plotted.}
+\item{data}{A \code{sf} (simple features) object containing the
+data to be plotted.}
 
 \item{fill}{The variable in \code{data} to be used for filling the regions.}
 

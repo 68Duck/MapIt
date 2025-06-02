@@ -28,6 +28,8 @@ library(ggnewscale)
 #' @import rnaturalearth
 #' @import sf
 #' @import ggnewscale
+#' 
+#' @export
 add_bar_charts <- function(df, width, height, attributes,
                            label_x = "label_x", label_y = "label_y") {
 

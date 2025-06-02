@@ -9,27 +9,27 @@ source(here("R/name_matching.R"))
 #' Merges two datasets based on country names.
 #'
 #' @param country_data A data frame containing the country data.
-#' @param auxillary_data A data frame containing the auxiliary data to merge.
+#' @param auxiliary_data A data frame containing the auxiliary data to merge.
 #' @param country_name A string specifying the column name in `country_data`
 #'                     that contains the country names.
-#' @param auxillary_country_name A string specifying the column name in
-#'                              `auxillary_data` that contains the country names
+#' @param auxiliary_country_name A string specifying the column name in
+#'                              `auxiliary_data` that contains the country names
 #'
 #' @return An `sf` data frame containing the merged data.
 #' @examples
-#' merged_data <- merge_data(country_data, auxillary_data,
+#' merged_data <- merge_data(country_data, auxiliary_data,
 #'                           "country", "country_name")
 #' @export
-merge_data <- function(country_data, auxillary_data,
-                       country_name, auxillary_country_name) {
+merge_data <- function(country_data, auxiliary_data,
+                       country_name, auxiliary_country_name) {
   original_countries <- country_data[[country_name]]
-  data <- merge(country_data, auxillary_data,
-                by.x = country_name, by.y = auxillary_country_name)
+  data <- merge(country_data, auxiliary_data,
+                by.x = country_name, by.y = auxiliary_country_name)
   merged_countries <- data[[country_name]]
   missing_countries <- setdiff(original_countries, merged_countries)
   if (length(missing_countries) > 0) {
-    warning(paste("Not all countries were found in the auxilarry data. 
-      The following countries were not merged: ",
+    warning(paste("Not all countries were found in the auxiliary data. 
+    The following countries were not merged: ",
                   paste(missing_countries, collapse = ", ")))
   }
   data <- st_as_sf(data)
@@ -40,28 +40,28 @@ merge_data <- function(country_data, auxillary_data,
 #' Merges two datasets based on country names, using name matching.
 #'
 #' @param country_data A data frame containing the country data.
-#' @param auxillary_data A data frame containing the auxiliary data to merge.
+#' @param auxiliary_data A data frame containing the auxiliary data to merge.
 #' @param country_name A string specifying the column name in `country_data`
 #'                     that contains the country names.
-#' @param auxillary_country_name A string specifying the column name in
-#'                              `auxillary_data` that contains the country names
+#' @param auxiliary_country_name A string specifying the column name in
+#'                              `auxiliary_data` that contains the country names
 #'
 #' @return An `sf` data frame containing the merged data.
 #' @examples
-#' merged_data <- merge_data_with_country_matching(country_data, auxillary_data,
+#' merged_data <- merge_data_with_country_matching(country_data, auxiliary_data,
 #'                                                 "country", "country_name")
 #' @export
-merge_data_with_country_matching <- function(country_data, auxillary_data,
+merge_data_with_country_matching <- function(country_data, auxiliary_data,
                                              country_name,
-                                             auxillary_country_name) {
+                                             auxiliary_country_name) {
   country_data$country_number <-
     apply(country_data, 1,
           function(row) get_country_number(row[country_name], 3))
-  auxillary_data$country_number <-
-    apply(auxillary_data, 1,
-          function(row) get_country_number(row[auxillary_country_name], 3))
+  auxiliary_data$country_number <-
+    apply(auxiliary_data, 1,
+          function(row) get_country_number(row[auxiliary_country_name], 3))
 
-  data <- merge(country_data, auxillary_data,
+  data <- merge(country_data, auxiliary_data,
                 by = "country_number", all.x = TRUE)
   data <- st_as_sf(data)
   data
@@ -71,32 +71,32 @@ merge_data_with_country_matching <- function(country_data, auxillary_data,
 #' and prompts user input if the countries cannot be allocated automatically.
 #'
 #' @param country_data A data frame containing the country data.
-#' @param auxillary_data A data frame containing the auxiliary data to merge.
+#' @param auxiliary_data A data frame containing the auxiliary data to merge.
 #' @param country_name A string specifying the column name in `country_data`
 #'                     that contains the country names.
-#' @param auxillary_country_name A string specifying the column name in
-#'                              `auxillary_data` that contains the country names
+#' @param auxiliary_country_name A string specifying the column name in
+#'                              `auxiliary_data` that contains the country names
 #'
 #' @return An `sf` data frame containing the merged data.
 #' @examples
-#' merged_data <- merge_data_with_ui(country_data, auxillary_data,
+#' merged_data <- merge_data_with_ui(country_data, auxiliary_data,
 #'                                   "country", "country_name")
 #' @export
-merge_data_with_ui <- function(country_data, auxillary_data,
+merge_data_with_ui <- function(country_data, auxiliary_data,
                                country_name,
-                               auxillary_country_name) {
+                               auxiliary_country_name) {
   country_data$country_number <-
     apply(country_data, 1,
           function(row) get_country_number_basic(row[country_name]))
-  auxillary_data$country_number <-
-    apply(auxillary_data, 1,
-          function(row) get_country_number_basic(row[auxillary_country_name]))
+  auxiliary_data$country_number <-
+    apply(auxiliary_data, 1,
+          function(row) get_country_number_basic(row[auxiliary_country_name]))
 
   country_data <- run_country_matching_ui(country_data, country_name)
-  auxillary_data <- run_country_matching_ui(auxillary_data,
-                                            auxillary_country_name)
+  auxiliary_data <- run_country_matching_ui(auxiliary_data,
+                                            auxiliary_country_name)
 
-  data <- merge(country_data, auxillary_data,
+  data <- merge(country_data, auxiliary_data,
                 by = "country_number", all.x = TRUE)
   data <- st_as_sf(data)
   data

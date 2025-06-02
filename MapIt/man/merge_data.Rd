@@ -4,18 +4,18 @@
 \alias{merge_data}
 \title{Merges two datasets based on country names.}
 \usage{
-merge_data(country_data, auxillary_data, country_name, auxillary_country_name)
+merge_data(country_data, auxiliary_data, country_name, auxiliary_country_name)
 }
 \arguments{
 \item{country_data}{A data frame containing the country data.}
 
-\item{auxillary_data}{A data frame containing the auxiliary data to merge.}
+\item{auxiliary_data}{A data frame containing the auxiliary data to merge.}
 
 \item{country_name}{A string specifying the column name in \code{country_data}
 that contains the country names.}
 
-\item{auxillary_country_name}{A string specifying the column name in
-\code{auxillary_data} that contains the country names}
+\item{auxiliary_country_name}{A string specifying the column name in
+\code{auxiliary_data} that contains the country names}
 }
 \value{
 An \code{sf} data frame containing the merged data.
@@ -24,6 +24,6 @@ An \code{sf} data frame containing the merged data.
 Merges two datasets based on country names.
 }
 \examples{
-merged_data <- merge_data(country_data, auxillary_data,
+merged_data <- merge_data(country_data, auxiliary_data,
                           "country", "country_name")
 }
