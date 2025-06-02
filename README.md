@@ -4,8 +4,12 @@
 
 ## Installation
 
-To install the development version of `MapIt` from GitHub, use:
+To install `MapIt` from GitHub, use:
 
 ```R
-# install.packages("devtools") # Uncomment if devtools isn't installed
 devtools::install_github("68duck/MapIt", subdir = "MapIt")
+```
+
+If devtools is also not installed, use:
+```R
+install.packages("devtools") 
