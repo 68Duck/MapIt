@@ -51,25 +51,12 @@ add_bar_charts <- function(df, width, height, attributes,
   dummy_legend <- geom_bar(stat = "identity", data = dummy_data, mapping = aes(
     x = Category, y = Value, fill = Category)) 
   list(
-  map_elements,
-  new_scale("fill"),
-  dummy_legend,
-  scale_fill_brewer(palette = "Set2"),
-  coord_sf(lims_method = "geometry_bbox")
+    map_elements,
+    new_scale("fill"),
+    dummy_legend,
+    scale_fill_brewer(palette = "Set2"),
+    coord_sf(lims_method = "geometry_bbox")
   )
-}
-
-create_legend <- function(df, attributes) {
-  data <- data.frame(
-    Category = attributes,
-    Value = sapply(attributes, function(attr) df[[attr]][1])
-  )
-
-  plot <- ggplot(data, aes(x = Category, y = Value, fill = Category)) +
-    geom_bar(stat = "identity") +
-    scale_fill_brewer(palette = "Set2")
-
-  plot
 }
 
 #' Builds a bar chart

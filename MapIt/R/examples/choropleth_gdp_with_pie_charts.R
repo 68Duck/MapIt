@@ -1,11 +1,9 @@
 library(here)
 library(rnaturalearth)
 library(rvest)
-
-source(here("R/merge_data.R"))
+source(here("R/add_lines.R"))
+source(here("R/add_pie_charts.R"))
 source(here("R/choropleth.R"))
-source(here("R/add_bar_charts.R"))
-source(here("R/add_points.R"))
 
 url <-
   "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition"
@@ -17,19 +15,20 @@ country_data <- ne_countries(scale = 10, type = "countries",
                              continent = "south america",
                              returnclass = "sf")
 
-width <- 8
-height <- 8
+width <- 10
+height <- 10
+pie_scale <- 3
 
 data <- merge_data_with_ui(country_data, gdp_data,
-                                         "name", "Country/Economy")
+                           "name", "Country/Economy")
+
 data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
                                           "Service (%)"), c("%"))
 
-
 map <- choropleth(data, pop_est, "Population") +
-  add_bar_charts(data, width, height,
-                 c("Agricultural (%)", "Industrial (%)", "Service (%)"))
-
+       add_pie_charts(data, "label_x", "label_y", 
+         c("Agricultural (%)", "Industrial (%)", "Service (%)"),
+         pie_scale = pie_scale, legend_title = "Types of industry")
 
 
 print(map)

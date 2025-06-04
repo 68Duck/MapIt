@@ -39,7 +39,7 @@ add_pie_charts <- function(data, x, y, attributes,
                                  pie_scale = pie_scale),
                  coord_sf())
   if (!is.null(legend_title)) {
-    layers <- c(layers, labs(fill = legend_title))
+    layers <- append(layers, list(labs(fill = legend_title)))
   }
   layers
 
