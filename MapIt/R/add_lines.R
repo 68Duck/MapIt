@@ -115,13 +115,11 @@ find_closest_rects <- function(data, small_country_area, width, height) {
     }
   }
 
-  # optimal_assignment <- solve_LSAP(distances_matrix)
   n_countries <- nrow(distances_matrix)
   n_rects <- ncol(distances_matrix)
 
   if (n_countries > n_rects) {
     return(NULL)
-    # stop("Not enough valid rectangles for the number of small countries. Try increasing width/height.")
   }
 
   optimal_assignment <- solve_LSAP(distances_matrix)

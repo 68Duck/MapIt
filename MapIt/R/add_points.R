@@ -10,28 +10,29 @@ library(dplyr)
 #'   the points.
 #' @param attribute The name of the column in `data` that contains the variable
 #'  to determine the size and color of the points.
+#' @param point_size The size of the points used
 #' @param legend_title The title of the legend.
 #' 
 #' @return A layer of points that can be added to a ggplot object.
 #' 
 #' @examples
 #' df <- data.frame(x = rnorm(100), y = rnorm(100), measure = rnorm(100))
-#' plot <- ggplot() + add_points(df, x = "x", y = "y",
-#'  attribute = "attribute", legend_title = "Attribute")
+#' plot <- ggplot() + add_points(df, x = x, y = y,
+#'  attribute = attribute, point_size = 20, legend_title = "Attribute")
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @export
-add_points <- function(data, x, y, attribute, legend_title) {
-  data <- data[!is.na(data[[attribute]]), ]
-  data[[attribute]] <- as.numeric(data[[attribute]])
+add_points <- function(data, x, y, attribute, point_size, legend_title) {
+  data <- data[!is.na(attribute), ]
+  data$attribute <- as.numeric(attribute)
   list(
     new_scale("colour"),
     new_scale("size"),
-    geom_point(aes_string(x = data[[x]], y = data[[y]],
-                          size = data[[attribute]],
-                          colour = data[[attribute]])),
-    scale_size_continuous(range = c(1, 12)),
+    geom_point(aes(x = x, y = y,
+                   size = attribute,
+                   colour = attribute)),
+    scale_size_continuous(range = c(1, point_size)),
     scale_color_viridis_c(trans = "log"),
     labs("size" = legend_title),
     labs("colour" = legend_title)

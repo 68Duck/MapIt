@@ -19,14 +19,14 @@ library(ggstar)
 #' for positioning the star ratings. Default is "label_x".
 #' @param label_y The name of the column in `df` that contains the y-coordinate
 #' for positioning the star ratings. Default is "label_y".
-#' 
+#'
 #' @return The star layer as a list of geom objects
-#' 
+#'
 #' @examples
 #' df <- data.frame(id = 1:5, rating = c(5, 4, 3, 2, 1))
 #' map <- map + add_stars(df, attribute = "rating",
 #'  width = 100, height = 50, star_size = 10)
-#' 
+#'
 #' @import ggplot2
 #' @import rnaturalearth
 #' @import sf
@@ -41,11 +41,10 @@ add_stars <- function(df, attribute, width, height, star_size,
   no_stars <- 5
   for (i in 1:nrow(df)) {
     value <- round(df[[attribute]][i] / max_value * no_stars, digits = 0)
-    data <- data.frame(
-        x = c(1, 2, 3, 4, 5),
-        y = c(1, 1, 1, 1, 1),
-        colours = c(rep("yellow", each = value),
-         rep("grey", each = (no_stars - value)))
+    data <- data.frame(x = c(1, 2, 3, 4, 5),
+      y = c(1, 1, 1, 1, 1),
+      colours = c(rep("yellow", each = value),
+      rep("grey", each = (no_stars - value)))
     )
     map_elements[[i]] <- build_star_layer(df = df[i, , drop = FALSE],
      data = data, width = width, height = height, star_size = star_size)
@@ -86,17 +85,17 @@ add_stars <- function(df, attribute, width, height, star_size,
 build_star_layer <- function(df, data, width, height,
                              star_size, label_x, label_y) {
   points <- ggplot(data, aes(x = x, y = y, color = colours, fill = colours)) +
-    geom_star(stat = "identity", size=star_size) +
+    geom_star(stat = "identity", size = star_size) +
     scale_fill_manual(values = c("yellow" = "yellow", "grey" = "grey")) +
     scale_color_manual(values = c("yellow" = "yellow", "grey" = "grey")) +
     theme_minimal() +
-    theme(axis.line=element_blank(),axis.text.x=element_blank(),
-          axis.text.y=element_blank(),axis.ticks=element_blank(),
-          axis.title.x=element_blank(),
-          axis.title.y=element_blank(),legend.position="none",
-          panel.background=element_blank(),
-          panel.border=element_blank(),panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),plot.background=element_blank())
+    theme(axis.line = element_blank(), axis.text.x = element_blank(),
+          axis.text.y = element_blank(), axis.ticks = element_blank(),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank(),legend.position = "none",
+          panel.background = element_blank(),
+          panel.border = element_blank(), panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(), plot.background = element_blank())
 
   point_grob <- ggplotGrob(points)
 
