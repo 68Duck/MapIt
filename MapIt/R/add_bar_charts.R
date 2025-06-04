@@ -2,6 +2,7 @@ library(ggplot2)
 library(rnaturalearth)
 library(sf)
 library(ggnewscale)
+library(cowplot)
 
 #' Add a Bar Chart Layer to a ggplot layer
 #'
@@ -41,7 +42,34 @@ add_bar_charts <- function(df, width, height, attributes,
       width = width, height = height, attributes = attributes,
       label_x = label_x, label_y = label_y)
   }
-  map_elements
+
+  dummy_data <- data.frame(
+    Category = attributes,
+    Value = sapply(attributes, function(attr) df[[attr]][1])
+  )
+
+  dummy_legend <- geom_bar(stat = "identity", data = dummy_data, mapping = aes(
+    x = Category, y = Value, fill = Category)) 
+  list(
+  map_elements,
+  new_scale("fill"),
+  dummy_legend,
+  scale_fill_brewer(palette = "Set2"),
+  coord_sf(lims_method = "geometry_bbox")
+  )
+}
+
+create_legend <- function(df, attributes) {
+  data <- data.frame(
+    Category = attributes,
+    Value = sapply(attributes, function(attr) df[[attr]][1])
+  )
+
+  plot <- ggplot(data, aes(x = Category, y = Value, fill = Category)) +
+    geom_bar(stat = "identity") +
+    scale_fill_brewer(palette = "Set2")
+
+  plot
 }
 
 #' Builds a bar chart
@@ -77,11 +105,13 @@ build_layer <- function(df, width, height, attributes, label_x, label_y) {
     Value = sapply(attributes, function(attr) df[[attr]])
   )
 
-  bar_chart <- ggplot(data, aes(x = Category, y = Value)) +
-    geom_bar(stat = "identity", fill = "pink") +
+  bar_chart <- ggplot(data, aes(x = Category, y = Value, fill = Category)) +
+    geom_bar(stat = "identity") +
+    scale_fill_brewer(palette = "Set2") +
     theme_minimal() +
     theme(axis.title = element_blank(),
-     axis.text = element_blank(), axis.ticks = element_blank())
+     axis.text = element_blank(), axis.ticks = element_blank(),
+     legend.position = "none")
 
   bar_grob <- ggplotGrob(bar_chart)
   annotation_custom(grob = bar_grob, xmin = df$label_x - width / 2,

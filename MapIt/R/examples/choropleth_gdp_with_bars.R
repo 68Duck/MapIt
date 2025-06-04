@@ -17,8 +17,10 @@ country_data <- ne_countries(scale = 10, type = "countries",
                              continent = "south america",
                              returnclass = "sf")
 
+width <- 5
+height <- 5
 
-data <- merge_data_with_country_matching(country_data, gdp_data,
+data <- merge_data_with_ui(country_data, gdp_data,
                                          "name", "Country/Economy")
 data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
                                           "Service (%)"), c("%"))
@@ -29,10 +31,6 @@ map <- choropleth(data, pop_est, "Population") +
                  c("Agricultural (%)", "Industrial (%)", "Service (%)"))
 
 
-# data$`Total GDP (US$MM)` <- as.numeric(gsub(",", "", data$`Total GDP (US$MM)`))
-
-# map <- choropleth(data, pop_est, "Population") + 
-#         add_points(data, data$label_x, data$label_y,
-#         data$`Total GDP (US$MM)`, 20, "Total DP (US$MM)")
 
 print(map)
+ggsave("plot.png", plot = map, width = 10, height = 7, units = "in", dpi = 300)
