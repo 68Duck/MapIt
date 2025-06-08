@@ -37,6 +37,45 @@ merge_data <- function(country_data, auxiliary_data,
 }
 
 
+#' Merges two datasets based on country names using levenshtein distance.
+#'
+#' @param country_data A data frame containing the country data.
+#' @param auxiliary_data A data frame containing the auxiliary data to merge.
+#' @param country_name A string specifying the column name in `country_data`
+#'                     that contains the country names.
+#' @param auxiliary_country_name A string specifying the column name in
+#'                              `auxiliary_data` that contains the country names
+#' @param distance An integer representing the maximum levenshtein distance
+#'                 between two strings which can be matched
+#'
+#' @return An `sf` data frame containing the merged data.
+#' @examples
+#' merged_data <- merge_data_with_levenshtein_distance(country_data,
+#'                                                     auxiliary_data,
+#'                                                     "country",
+#'                                                     "country_name", 3)
+#' @export
+merge_data_with_levenshtein_distance <- function(country_data, auxiliary_data,
+                                                 country_name,
+                                                 auxiliary_country_name,
+                                                 distance = 3) {
+  original_countries <- country_data[[country_name]]
+  data <- merge(country_data, auxiliary_data,
+                by.x = country_name, by.y = auxiliary_country_name)
+  merged_countries <- data[[country_name]]
+
+  missing_countries <- setdiff(original_countries, merged_countries)
+
+  if (length(missing_countries) > 0) {
+    warning(paste("Not all countries were matched to the auxiliary data. 
+    The following countries were not merged: ",
+                  paste(missing_countries, collapse = ", ")))
+
+  }
+  data
+}
+
+
 #' Merges two datasets based on country names, using name matching.
 #'
 #' @param country_data A data frame containing the country data.
