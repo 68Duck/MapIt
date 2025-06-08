@@ -224,10 +224,9 @@ modify_label_positions <- function(data, small_country_area, width, height,
 #' @import sf
 #' @export
 add_lines_to_labels <- function(data, width, height) {
-
-  geom_segment(data = data, aes(x = data$country_point.X,
-                                y = data$country_point.Y,
-                                xend = data$rectangle_point.X,
-                                yend = data$rectangle_point.Y),
+  geom_segment(data = data, aes(x = country_point.X,
+                                y = country_point.Y,
+                                xend = rectangle_point.X,
+                                yend = rectangle_point.Y),
                color = "blue", size = 1)
 }
