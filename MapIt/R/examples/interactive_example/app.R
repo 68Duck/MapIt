@@ -1,6 +1,7 @@
 library(shiny)
 library(ggplot2)
 library(dplyr)
+library(rvest)
 
 source(here("R/add_lines.R"))
 source(here("R/add_bar_charts.R"))
@@ -19,8 +20,10 @@ continent_data <- list(
   world = world_data
 )
 
+
+
 ui <- fluidPage(
-  titlePanel("Test"),
+  titlePanel("Map Builder"),
   sidebarLayout(
     sidebarPanel(
       selectInput("chart_type", "Choose chart type:",
@@ -48,6 +51,17 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$ggplot <- renderPlot({
     data <- continent_data[[input$continent_choice]]
+
+    url <-
+      "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_sector_composition"
+    webpage <- read_html(url)
+    table_nodes <- html_nodes(webpage, "table.wikitable")
+    gdp_data <- html_table(table_nodes[[2]], fill = TRUE)
+
+    data <- merge_data_with_ui(data, gdp_data,
+                              "name", "Country/Economy")
+    data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
+                  "Service (%)"), c("%"))
     # if (input$continent_choice == "world") {
     #   data <- ne_countries(returnclass = "sf", scale = 10)
     # } else {
@@ -67,11 +81,12 @@ server <- function(input, output) {
         validate(need(!is.null(data),
                       "Bar chart size is too large to fit on the map"))
         
-        map <- choropleth(data = data, fill = data$pop_rank,
-                        legend_title = "Population rank") +
+        map <- choropleth(data = data, fill = pop_est,
+                        legend_title = "Population") +
             add_lines_to_labels(data = data, width = width, height = height) +
-            add_bar_charts(df = data, width = width, height = height,
-                            attributes = c("pop_rank", "name_len"))
+            add_bar_charts(data, width, height,
+                          c("Agricultural (%)", "Industrial (%)", "Service (%)"),
+                          "GDP by sector")
         return (map)
     } else if (input$chart_type == "Pie Chart") {
         width <- input$size_choice / 2
