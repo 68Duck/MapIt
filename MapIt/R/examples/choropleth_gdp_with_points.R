@@ -20,11 +20,13 @@ country_data <- ne_countries(scale = 10, type = "countries",
 data <- merge_data_with_ui(country_data, gdp_data,
                    "name", "Country/Economy")
 
+point_size <- 20
+
 
 data$`Total GDP (US$MM)` <- as.numeric(gsub(",", "", data$`Total GDP (US$MM)`))
 
-map <- choropleth(data, pop_est, "Population") + 
-        add_points(data, data$label_x, data$label_y,
-        data$`Total GDP (US$MM)`, 20, "Total DP (US$MM)")
+map <- choropleth(data, pop_est, "Population") +
+        add_points(data, "label_x", "label_y",
+                   "Total GDP (US$MM)", point_size, "Total DP (US$MM)")
 
 print(map)

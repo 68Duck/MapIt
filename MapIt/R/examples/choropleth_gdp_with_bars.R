@@ -21,14 +21,14 @@ width <- 8
 height <- 8
 
 data <- merge_data_with_ui(country_data, gdp_data,
-                                         "name", "Country/Economy")
+                           "name", "Country/Economy")
 data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
                                           "Service (%)"), c("%"))
 
-
 map <- choropleth(data, pop_est, "Population") +
   add_bar_charts(data, width, height,
-                 c("Agricultural (%)", "Industrial (%)", "Service (%)"))
+                 c("Agricultural (%)", "Industrial (%)", "Service (%)"),
+                 "GDP by sector")
 
 
 

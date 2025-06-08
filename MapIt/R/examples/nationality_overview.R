@@ -17,8 +17,8 @@ country_data <- ne_countries(scale = 10, type = "countries")
 data <- merge_data_with_country_matching(country_data,
                                          csv_data, "name", "nationality")
 
-map <- choropleth(data, data$no, "Number of people") +
-  add_points(data, "label_x", "label_y", "avg_tmua", "Average tmua score")
+map <- choropleth(data, no, "Number of people") +
+  add_points(data, "label_x", "label_y", "avg_tmua", 10, "Average tmua score")
 
 
 
