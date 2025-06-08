@@ -33,7 +33,7 @@ library(ggstar)
 #' @import ggnewscale
 #' @import ggstar
 #' @export
-add_stars <- function(df, attribute, width, height, star_size,
+add_stars <- function(df, attribute, width, height, star_size, legend_title,
                       label_x = "label_x", label_y = "label_y") {
   map_elements <- list()
   df <- df[!is.na(df[[attribute]]), ]
@@ -43,13 +43,35 @@ add_stars <- function(df, attribute, width, height, star_size,
     value <- round(df[[attribute]][i] / max_value * no_stars, digits = 0)
     data <- data.frame(x = c(1, 2, 3, 4, 5),
       y = c(1, 1, 1, 1, 1),
-      colours = c(rep("yellow", each = value),
-      rep("grey", each = (no_stars - value)))
+      colours = c(rep("Achieved", each = value),
+      rep("Empty", each = (no_stars - value)))
     )
     map_elements[[i]] <- build_star_layer(df = df[i, , drop = FALSE],
      data = data, width = width, height = height, star_size = star_size)
   }
-  map_elements
+
+  value <- 3
+  dummy_data <- data.frame(x = c(0, 0, 0, 0, 0),
+      y = c(1, 1, 1, 1, 1),
+      colours = c(rep("Achieved", each = value),
+      rep("Empty", each = (no_stars - value)))
+    )
+
+  dummy_legend <- geom_star(dummy_data, 
+    mapping = aes(x = -Inf, y = -Inf, color = colours, fill = colours),
+    stat = "identity", size = star_size)
+
+  list(
+    map_elements,
+    new_scale("fill"),
+    new_scale("colour"),
+    dummy_legend, 
+    labs(fill = legend_title),
+    scale_fill_manual(values = c("Achieved" = "yellow", "Empty" = "grey")),
+    scale_color_manual(values = c("Achieved" = "black", "Empty" = "black"),
+                       guide = "none")
+
+  )
 }
 
 
@@ -86,9 +108,10 @@ build_star_layer <- function(df, data, width, height,
                              star_size, label_x, label_y) {
   points <- ggplot(data, aes(x = x, y = y, color = colours, fill = colours)) +
     geom_star(stat = "identity", size = star_size) +
-    scale_fill_manual(values = c("yellow" = "yellow", "grey" = "grey")) +
-    scale_color_manual(values = c("yellow" = "yellow", "grey" = "grey")) +
+    scale_fill_manual(values = c("Achieved" = "yellow", "Empty" = "grey")) +
+    scale_color_manual(values = c("Achieved" = "black", "Empty" = "black")) +
     theme_minimal() +
+    coord_sf(clip = "off") +
     theme(axis.line = element_blank(), axis.text.x = element_blank(),
           axis.text.y = element_blank(), axis.ticks = element_blank(),
           axis.title.x = element_blank(),
