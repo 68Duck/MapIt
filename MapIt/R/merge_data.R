@@ -55,21 +55,40 @@ merge_data <- function(country_data, auxiliary_data,
 #'                                                     "country",
 #'                                                     "country_name", 3)
 #' @export
-merge_data_with_levenshtein_distance <- function(country_data, auxiliary_data,
-                                                 country_name,
-                                                 auxiliary_country_name,
+merge_data_with_levenshtein_distance <- function(region_data, auxiliary_data,
+                                                 region_name,
+                                                 auxiliary_region_name,
                                                  distance = 3) {
-  original_countries <- country_data[[country_name]]
-  data <- merge(country_data, auxiliary_data,
-                by.x = country_name, by.y = auxiliary_country_name)
-  merged_countries <- data[[country_name]]
+  region_data$region_number <- seq_len(nrow(region_data))
+  original_regions <- region_data[[region_name]]
+  match_indices <- match(auxiliary_data[[auxiliary_region_name]],
+                         region_data[[region_name]])
+  auxiliary_data$region_number <- region_data$region_number[match_indices]
+  print(auxiliary_data$region_number)
 
-  missing_countries <- setdiff(original_countries, merged_countries)
+  for (i in seq_len(nrow(auxiliary_data))) {
+    if (is.na(auxiliary_data$region_number[i])) {
+      auxiliary_name <- auxiliary_data[[auxiliary_region_name]][i]
+      for (j in seq_len(nrow(region_data))) {
+        if (!j %in% auxiliary_data$region_number) {
+          if (levenshtein_distance_lesser_than(region_data[[region_name]][j],
+                                               auxiliary_name, distance)) {
+            auxiliary_data$region_number[i] <- j
+          }
+        }
+      }
+    }
+  }
+  data <- merge(region_data, auxiliary_data,
+                by.x = "region_number", by.y = "region_number")
+  merged_regions <- data[[region_name]]
 
-  if (length(missing_countries) > 0) {
-    warning(paste("Not all countries were matched to the auxiliary data. 
-    The following countries were not merged: ",
-                  paste(missing_countries, collapse = ", ")))
+  missing_regions <- setdiff(original_regions, merged_regions)
+
+  if (length(missing_regions) > 0) {
+    warning(paste("Not all regions were matched to the auxiliary data. 
+    The following regions were not merged: ",
+                  paste(missing_regions, collapse = ", ")))
 
   }
   data
@@ -90,18 +109,19 @@ merge_data_with_levenshtein_distance <- function(country_data, auxiliary_data,
 #' merged_data <- merge_data_with_country_matching(country_data, auxiliary_data,
 #'                                                 "country", "country_name")
 #' @export
-merge_data_with_country_matching <- function(country_data, auxiliary_data,
-                                             country_name,
-                                             auxiliary_country_name) {
-  country_data$country_number <-
-    apply(country_data, 1,
-          function(row) get_country_number(row[country_name], 3))
-  auxiliary_data$country_number <-
+merge_data_with_CSV <- function(region_data, auxiliary_data,
+                                             region_name,
+                                             auxiliary_region_name,
+                                             csv_path) {
+  region_data$region_number <-
+    apply(region_data, 1,
+          function(row) get_region_number(row[region_name], 3))
+  auxiliary_data$region_number <-
     apply(auxiliary_data, 1,
-          function(row) get_country_number(row[auxiliary_country_name], 3))
+          function(row) get_region_number(row[auxiliary_region_name], 3))
 
-  data <- merge(country_data, auxiliary_data,
-                by = "country_number", all.x = TRUE)
+  data <- merge(region_data, auxiliary_data,
+                by = "region_number", all.x = TRUE)
   data <- st_as_sf(data)
   data
 }
