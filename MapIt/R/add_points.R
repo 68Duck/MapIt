@@ -24,14 +24,13 @@ library(dplyr)
 #' @import dplyr
 #' @export
 add_points <- function(data, x, y, attribute, point_size, legend_title) {
-  data <- data[!is.na(attribute), ]
-  data$attribute <- as.numeric(attribute)
+  data[[attribute]] <- as.numeric(data[[attribute]])
   list(
     new_scale("colour"),
     new_scale("size"),
-    geom_point(aes(x = x, y = y,
-                   size = attribute,
-                   colour = attribute)),
+    geom_point(aes(x = data[[x]], y = data[[y]],
+                   size = data[[attribute]],
+                   colour = data[[attribute]])),
     scale_size_continuous(range = c(1, point_size)),
     scale_color_viridis_c(trans = "log"),
     labs("size" = legend_title),
