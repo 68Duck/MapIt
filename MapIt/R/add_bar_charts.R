@@ -31,11 +31,10 @@ library(cowplot)
 #' @import ggnewscale
 #' 
 #' @export
-add_bar_charts <- function(df, width, height, attributes,
+add_bar_charts <- function(df, width, height, attributes, legend_title,
                            label_x = "label_x", label_y = "label_y") {
 
   map_elements <- list()
-
   df_no_na <- df[apply(df[attributes], 1, function(row) all(!is.na(row))), ]
   for (i in 1:nrow(df_no_na)) {
     map_elements[[i]] <- build_layer(df = df_no_na[i, , drop = FALSE],
@@ -45,17 +44,21 @@ add_bar_charts <- function(df, width, height, attributes,
 
   dummy_data <- data.frame(
     Category = attributes,
-    Value = sapply(attributes, function(attr) df[[attr]][1])
+    Value = sapply(attributes, function(attr) as.numeric(df[[attr]][1]))
   )
 
   dummy_legend <- geom_bar(stat = "identity", data = dummy_data, mapping = aes(
-    x = Category, y = Value, fill = Category)) 
+    x = -Inf, y = -Inf, fill = Category)) 
   list(
     map_elements,
-    new_scale("fill"),
-    dummy_legend,
-    scale_fill_brewer(palette = "Set2"),
-    coord_sf(lims_method = "geometry_bbox")
+    list(
+
+      new_scale("fill"),
+      dummy_legend,
+      labs(fill = legend_title),
+      scale_fill_brewer(palette = "Set2"),
+      coord_sf(lims_method = "geometry_bbox")
+    )
   )
 }
 
@@ -89,9 +92,8 @@ add_bar_charts <- function(df, width, height, attributes,
 build_layer <- function(df, width, height, attributes, label_x, label_y) {
   data <- data.frame(
     Category = attributes,
-    Value = sapply(attributes, function(attr) df[[attr]])
+    Value = sapply(attributes, function(attr) as.numeric(df[[attr]]))
   )
-
   bar_chart <- ggplot(data, aes(x = Category, y = Value, fill = Category)) +
     geom_bar(stat = "identity") +
     scale_fill_brewer(palette = "Set2") +
