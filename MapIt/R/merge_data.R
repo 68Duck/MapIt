@@ -111,20 +111,31 @@ merge_data_with_levenshtein_distance <- function(region_data, auxiliary_data,
 #'                                    "country", "country_name", csv_path)
 #' @export
 merge_data_with_csv <- function(region_data, auxiliary_data,
-                                             region_name,
-                                             auxiliary_region_name,
-                                             csv_path,
-                                             basic = FALSE) {
+                                region_name,
+                                auxiliary_region_name,
+                                csv_path,
+                                distance = 1,
+                                basic = FALSE) {
   region_data$region_number <-
     apply(region_data, 1,
-          function(row) get_region_number(row[region_name], csv_path, 3, basic))
+          function(row) get_region_number(row[region_name], csv_path,
+                                          distance, basic))
   auxiliary_data$region_number <-
     apply(auxiliary_data, 1,
           function(row) get_region_number(row[auxiliary_region_name], csv_path,
-                                          3, basic))
+                                          distance, basic))
 
   data <- merge(region_data, auxiliary_data,
                 by = "region_number", all.x = TRUE)
+
+  missing_regions <- data[is.na(data[[auxiliary_region_name]]), ]
+
+  if (length(missing_regions) > 0) {
+    warning(paste("Not all regions were matched to the auxiliary data. 
+    The following regions were not merged: ",
+                  paste(missing_regions[[region_name]], collapse = ", ")))
+  }
+
   data <- st_as_sf(data)
   data
 }
@@ -147,15 +158,16 @@ merge_data_with_csv <- function(region_data, auxiliary_data,
 merge_data_with_ui <- function(region_data, auxiliary_data,
                                region_name,
                                auxiliary_region_name,
-                               csv_path) {
+                               csv_path,
+                               distance = 3) {
   region_data$region_number <-
     apply(region_data, 1,
           function(row) get_region_number(row[region_name],
-           csv_path, 3))
+           csv_path, distance))
   auxiliary_data$region_number <-
     apply(auxiliary_data, 1,
           function(row) get_region_number(row[auxiliary_region_name],
-           csv_path, 3))
+           csv_path, distance))
 
   region_data <- run_region_matching_ui(region_data, region_name, csv_path)
   auxiliary_data <- run_region_matching_ui(auxiliary_data,
@@ -183,8 +195,10 @@ merge_data_with_ui <- function(region_data, auxiliary_data,
 run_region_matching_ui <- function(region_data, region_name, csv_path) {
   used_region_numbers <- region_data$region_number
   regions_to_remove <- c()
+  manually_assigned_regions <- list()
+
   for (i in 1:nrow(region_data)) {
-    region_name_value <- region_data[i, region_name]
+    region_name_value <- region_data[[region_name]][i]
     region_number <- region_data[["region_number"]][i]
     remove_region <- FALSE
     while (region_number == -1) {
@@ -207,6 +221,8 @@ run_region_matching_ui <- function(region_data, region_name, csv_path) {
         print(paste("The region: ", new_region_name,
                     " is already in the data. Please pick a different region"))
         region_number <- -1
+      } else {
+        manually_assigned_regions[[region_name_value]] <- region_number
       }
     }
     if (!remove_region) {
@@ -217,7 +233,41 @@ run_region_matching_ui <- function(region_data, region_name, csv_path) {
   if (length(regions_to_remove) > 0) {
     region_data <- region_data[-regions_to_remove, ]
   }
+
+  if (length(manually_assigned_regions) > 0) {
+    save <- ""
+    while (tolower(save) != "y" && tolower(save) != "n") {
+      save <-
+        readline(prompt = paste(
+                                "Would you like to save the new values input? \n
+                                Y/N:"))
+    }
+    if (tolower(save) == "y") {
+      save_to_csv(manually_assigned_regions, csv_path)
+      print("Saved the data")
+    }
+  }
+
   region_data
+}
+
+
+save_to_csv <- function(regions, csv_path) {
+  data <- read.csv(here(csv_path), header = FALSE)
+  for (region in names(regions)) {
+    region_number <- regions[[region]]
+
+    row <- data[region_number, ]
+    first_na_col <- which(is.na(row))[1]
+    if (is.na(first_na_col)) {
+      new_col_index <- ncol(data) + 1
+      data[[new_col_index]] <- NA
+      first_na_col <- new_col_index
+    }
+
+    data[region_number, first_na_col] <- region
+  }
+  write.csv(data, "test.csv", row.names = FALSE, header = FALSE)
 }
 
 
