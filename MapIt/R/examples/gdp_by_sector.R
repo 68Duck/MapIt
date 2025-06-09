@@ -18,8 +18,8 @@ country_data <- ne_countries(scale = 10, type = "countries",
                              continent = "africa",
                              returnclass = "sf")
 
-data <- merge_data_with_country_matching(country_data, gdp_data,
-                                         "name", "Country/Economy")
+data <- merge_data_with_csv(country_data, gdp_data,
+                                         "name", "Country/Economy", "countryNames.csv")
 data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
                                           "Service (%)"), c("%"))
 
