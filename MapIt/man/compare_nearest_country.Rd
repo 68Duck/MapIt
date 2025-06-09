@@ -4,7 +4,7 @@
 \alias{compare_nearest_country}
 \title{Compares if two countries are the same based on their Levenshtein distance.}
 \usage{
-compare_nearest_country(country1, country2, max_distance)
+compare_nearest_country(country1, country2, max_distance, csv_path)
 }
 \arguments{
 \item{country1}{A string representing the first country name.}

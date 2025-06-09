@@ -10,6 +10,7 @@ add_stars(
   width,
   height,
   star_size,
+  legend_title,
   label_x = "label_x",
   label_y = "label_y"
 )

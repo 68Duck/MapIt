@@ -4,7 +4,7 @@
 \alias{add_points}
 \title{Generates a point layer based off an attribute}
 \usage{
-add_points(data, x, y, attribute, legend_title)
+add_points(data, x, y, attribute, point_size, legend_title)
 }
 \arguments{
 \item{data}{A data frame containing the data to be plotted.}
@@ -18,6 +18,8 @@ the points.}
 \item{attribute}{The name of the column in \code{data} that contains the variable
 to determine the size and color of the points.}
 
+\item{point_size}{The size of the points used}
+
 \item{legend_title}{The title of the legend.}
 }
 \value{
@@ -28,7 +30,7 @@ Generates a point layer based off an attribute
 }
 \examples{
 df <- data.frame(x = rnorm(100), y = rnorm(100), measure = rnorm(100))
-plot <- ggplot() + add_points(df, x = "x", y = "y",
- attribute = "attribute", legend_title = "Attribute")
+plot <- ggplot() + add_points(df, x = x, y = y,
+ attribute = attribute, point_size = 20, legend_title = "Attribute")
 
 }

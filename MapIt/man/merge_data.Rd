@@ -2,26 +2,26 @@
 % Please edit documentation in R/merge_data.R
 \name{merge_data}
 \alias{merge_data}
-\title{Merges two datasets based on country names.}
+\title{Merges two datasets based on region names.}
 \usage{
-merge_data(country_data, auxiliary_data, country_name, auxiliary_country_name)
+merge_data(region_data, auxiliary_data, region_name, auxiliary_region_name)
 }
 \arguments{
-\item{country_data}{A data frame containing the country data.}
+\item{region_data}{A data frame containing the region data.}
 
 \item{auxiliary_data}{A data frame containing the auxiliary data to merge.}
 
-\item{country_name}{A string specifying the column name in \code{country_data}
-that contains the country names.}
+\item{region_name}{A string specifying the column name in \code{region}
+that contains the region names.}
 
-\item{auxiliary_country_name}{A string specifying the column name in
-\code{auxiliary_data} that contains the country names}
+\item{auxiliary_region_name}{A string specifying the column name in
+\code{auxiliary_data} that contains the region names}
 }
 \value{
 An \code{sf} data frame containing the merged data.
 }
 \description{
-Merges two datasets based on country names.
+Merges two datasets based on region names.
 }
 \examples{
 merged_data <- merge_data(country_data, auxiliary_data,

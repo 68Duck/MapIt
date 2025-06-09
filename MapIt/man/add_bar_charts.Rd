@@ -9,6 +9,7 @@ add_bar_charts(
   width,
   height,
   attributes,
+  legend_title,
   label_x = "label_x",
   label_y = "label_y"
 )
