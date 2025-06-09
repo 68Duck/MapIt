@@ -33,14 +33,16 @@ library(here)
 #'
 #' @param region A string representing the region name to search for.
 #' @param x A numeric threshold for the Levenshtein distance.
+#' @param method A string representing the edit distance method
+#' 
 #'
 #' @return The row index of the closest matching country
 #'         if found; otherwise, -1.
 #' @examples
-#' country_number <- get_country_number_with_levenshtein_distance("germany", 3)
+#' country_number <- get_country_number_with_edit_distance("germany", 3)
 #' @export
-get_region_number_with_levenshtein_distance <- function(country,
-                                                        distance, csv_path) {
+get_region_number_with_edit_distance <- function(country, distance,
+                                                 csv_path, method = "lv") {
   data <- read.csv(here(csv_path), header = FALSE)
   for (i in 1:nrow(data)) {
     row <- data[i, ]
@@ -49,8 +51,8 @@ get_region_number_with_levenshtein_distance <- function(country,
       if (length(value) == 0) {
         break
       }
-      if (levenshtein_distance_lesser_than(toString(value),
-                                           tolower(country), distance)) {
+      if (distance_lesser_than(toString(value),
+                               tolower(country), distance, method)) {
         print(i)
         return(i)
       }
@@ -72,14 +74,16 @@ get_region_number_with_levenshtein_distance <- function(country,
 #' @param x A numeric threshold for the Levenshtein distance.
 #' @param csv_path A string specifying the path of the csv which has
 #'                 alternative names for regins in its rows
-#' @param basic A boolean which sets whether levenshtein distance is used or not
+#' @param basic A boolean which sets whether edit distance is used or not
+#' @param method A string representing the edit distance method
 #'
 #' @return The row index of the closest matching region
 #'          if found; otherwise, -1.
 #' @examples
 #' country_number <- get_region_number("germany", csv_path, 3)
 #' @export
-get_region_number <- function(region, csv_path, distance = 3, basic = FALSE) {
+get_region_number <- function(region, csv_path, distance = 3, method = "lv",
+                              basic = FALSE) {
   region <- gsub("\\b(and|of|the)\\b", "", region, ignore.case = TRUE)
   region <- tolower(region)
   data <- read.csv(here(csv_path), header = FALSE)
@@ -98,8 +102,7 @@ get_region_number <- function(region, csv_path, distance = 3, basic = FALSE) {
           return(i)
         }
       } else {
-        if (levenshtein_distance_lesser_than(value,
-                                             region, distance)) {
+        if (distance_lesser_than(value, region, distance, method)) {
           return(i)
         }
       }
@@ -128,19 +131,27 @@ get_region_from_map <- function(region, csv_path) {
 
 
 
-#' Calculates the Levenshtein distance between two strings and checks
+#' Calculates the distance between two strings and checks
 #'  if it is less than a threshold.
 #'
 #' @param str1 A string representing the first name.
 #' @param str2 A string representing the second name.
-#' @param x A numeric threshold for the Levenshtein distance.
+#' @param x A numeric threshold for the distance.
+#' @param method A string representing the edit distance method
 #'
-#' @return TRUE if the Levenshtein distance is less than `x`; otherwise, FALSE.
+#' @return TRUE if the distance is less than `x`; otherwise, FALSE.
 #' @examples
-#' is_closer <- levenshtein_distance_lesser_than("germany", "germnay", 3)
+#' is_closer <- distance_lesser_than("germany", "germnay", 3)
 #' @export
-levenshtein_distance_lesser_than <- function(str1, str2, x) {
-  dist <- stringdist(str1, str2, method = "lv")
+distance_lesser_than <- function(str1, str2, x, method = "lv") {
+  valid_methods <- c("osa", "lv", "dl", "hamming",
+                     "lcs", "qgram", "cosine",
+                     "jaccard", "jw", "soundex")
+
+  if (!method %in% valid_methods) {
+    stop(paste("Method ", method, " is not valid. Please try another method"))
+  }
+  dist <- stringdist(str1, str2, method)
   dist < x
 }
 
@@ -241,12 +252,12 @@ abbreviated <- function(str1, str2) {
 #' are_same <- compare_nearest_country("germany", "germnay", 3)
 #' @export
 compare_nearest_country <- function(country1, country2, max_distance, csv_path) {
-  number1 <- get_region_number_with_levenshtein_distance(country1,
-                                                          max_distance,
-                                                          csv_path)
-  number2 <- get_region_number_with_levenshtein_distance(country2,
-                                                          max_distance,
-                                                          csv_path)
+  number1 <- get_region_number_with_edit_distance(country1,
+                                                  max_distance,
+                                                  csv_path)
+  number2 <- get_region_number_with_edit_distance(country2,
+                                                  max_distance,
+                                                  csv_path)
   number1 == number2
 }
 
@@ -264,11 +275,10 @@ compare_nearest_country <- function(country1, country2, max_distance, csv_path) 
 #' country_indexes <- get_country_indexes_from_dataframe(
 #'  countries = c("Germany", "France"),
 #'  data_frame_countries = csv_data$V1, max_distance = 3)
-#' @export
 get_country_indexes_from_dataframe <- function(countries, data_frame_countries,
                                                max_distance) {
   numbers <- map(countries,
-                 \(x) get_country_number_with_levenshtein_distance(
+                 \(x) get_country_number_with_edit_distance(
                    x,
                    max_distance
                 ))

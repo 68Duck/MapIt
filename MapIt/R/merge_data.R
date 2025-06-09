@@ -55,10 +55,11 @@ merge_data <- function(region_data, auxiliary_data,
 #'                                                     "country",
 #'                                                     "country_name", 3)
 #' @export
-merge_data_with_levenshtein_distance <- function(region_data, auxiliary_data,
-                                                 region_name,
-                                                 auxiliary_region_name,
-                                                 distance = 3) {
+merge_data_with_edit_distance <- function(region_data, auxiliary_data,
+                                          region_name,
+                                          auxiliary_region_name,
+                                          distance = 3, 
+                                          method = "lv") {
   region_data$region_number <- seq_len(nrow(region_data))
   original_regions <- region_data[[region_name]]
   match_indices <- match(auxiliary_data[[auxiliary_region_name]],
@@ -70,8 +71,8 @@ merge_data_with_levenshtein_distance <- function(region_data, auxiliary_data,
       auxiliary_name <- auxiliary_data[[auxiliary_region_name]][i]
       for (j in seq_len(nrow(region_data))) {
         if (!j %in% auxiliary_data$region_number) {
-          if (levenshtein_distance_lesser_than(region_data[[region_name]][j],
-                                               auxiliary_name, distance)) {
+          if (distance_lesser_than(region_data[[region_name]][j],
+                                   auxiliary_name, distance, method)) {
             auxiliary_data$region_number[i] <- j
           }
         }
@@ -104,6 +105,10 @@ merge_data_with_levenshtein_distance <- function(region_data, auxiliary_data,
 #'                              `auxiliary_data` that contains the region names
 #' @param csv_path A string specifying the path of the csv which has
 #'                 alternative names for regins in its rows
+#' @param distance An integer representing the maximum edit distance permitted
+#' @param method A string specifing the edit distance algorithm to be used
+#' @param basic A boolean representing whether the edit distance algorithm 
+#'              should be used
 #'
 #' @return An `sf` data frame containing the merged data.
 #' @examples
@@ -115,15 +120,16 @@ merge_data_with_csv <- function(region_data, auxiliary_data,
                                 auxiliary_region_name,
                                 csv_path,
                                 distance = 1,
+                                method = "lv",
                                 basic = FALSE) {
   region_data$region_number <-
     apply(region_data, 1,
           function(row) get_region_number(row[region_name], csv_path,
-                                          distance, basic))
+                                          distance, method, basic))
   auxiliary_data$region_number <-
     apply(auxiliary_data, 1,
           function(row) get_region_number(row[auxiliary_region_name], csv_path,
-                                          distance, basic))
+                                          distance, method, basic))
 
   data <- merge(region_data, auxiliary_data,
                 by = "region_number", all.x = TRUE)
@@ -149,29 +155,36 @@ merge_data_with_csv <- function(region_data, auxiliary_data,
 #'                     that contains the region names.
 #' @param auxiliary_region_name A string specifying the column name in
 #'                              `auxiliary_data` that contains the region names
+#' @param csv_path A string specifying the path of the csv which has
+#'                 alternative names for regins in its rows
+#' @param distance An integer representing the maximum edit distance permitted
+#' @param method A string specifing the edit distance algorithm to be used
 #'
 #' @return An `sf` data frame containing the merged data.
 #' @examples
 #' merged_data <- merge_data_with_ui(country_data, auxiliary_data,
-#'                                   "country", "country_name")
+#'                                   "country", "country_name", csv_path)
 #' @export
 merge_data_with_ui <- function(region_data, auxiliary_data,
                                region_name,
                                auxiliary_region_name,
                                csv_path,
-                               distance = 3) {
+                               distance = 3, 
+                               method = "lv") {
   region_data$region_number <-
     apply(region_data, 1,
           function(row) get_region_number(row[region_name],
-           csv_path, distance))
+           csv_path, distance, method))
   auxiliary_data$region_number <-
     apply(auxiliary_data, 1,
           function(row) get_region_number(row[auxiliary_region_name],
-           csv_path, distance))
+           csv_path, distance, method))
 
-  region_data <- run_region_matching_ui(region_data, region_name, csv_path)
+  region_data <- run_region_matching_ui(region_data, region_name, csv_path,
+                                        distance, method)
   auxiliary_data <- run_region_matching_ui(auxiliary_data,
-                                           auxiliary_region_name, csv_path)
+                                           auxiliary_region_name, csv_path,
+                                           distance, method)
 
   data <- merge(region_data, auxiliary_data,
                 by = "region_number", all.x = TRUE)
@@ -192,7 +205,8 @@ merge_data_with_ui <- function(region_data, auxiliary_data,
 #' @return An `sf` data frame containing new region numbers
 #' @examples
 #' country_data <- run_region_matching_ui(country_data, "country")
-run_region_matching_ui <- function(region_data, region_name, csv_path) {
+run_region_matching_ui <- function(region_data, region_name, csv_path,
+                                   distance = 3, method = "lv") {
   used_region_numbers <- region_data$region_number
   regions_to_remove <- c()
   manually_assigned_regions <- list()
@@ -213,7 +227,8 @@ run_region_matching_ui <- function(region_data, region_name, csv_path) {
         remove_region <- TRUE
         break
       }
-      region_number <- get_region_number(new_region_name, csv_path, 3)
+      region_number <- get_region_number(new_region_name, csv_path, 
+                                         distance, method)
       if (region_number == -1) {
         print(paste("The region: ", new_region_name,
                     " is not a valid region Please try again."))
@@ -247,7 +262,6 @@ run_region_matching_ui <- function(region_data, region_name, csv_path) {
       print("Saved the data")
     }
   }
-
   region_data
 }
 
