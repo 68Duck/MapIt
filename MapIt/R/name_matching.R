@@ -2,25 +2,25 @@ library(stringdist)
 library(purrr)
 library(here)
 
-csv_data <<- read.csv(here("countryNames.csv"), header = FALSE)
+# csv_data <<- read.csv(here("countryNames.csv"), header = FALSE)
 
-#' Creates a mapping from country names to numbers
-#'
-#' @return A map of country names to numbers
-#' @import stringdist
-#' @examples
-#' country_map <- create_country_map()
-create_country_map <- function() {
-  data <- csv_data
-  country_map <- list()
-  for (i in 1:nrow(data)) {
-    for (j in 1:ncol(data)) {
-      country_name <- tolower(data[i, j])
-      country_map[[country_name]] <- i
-    }
-  }
-  country_map
-}
+# #' Creates a mapping from country names to numbers
+# #'
+# #' @return A map of country names to numbers
+# #' @import stringdist
+# #' @examples
+# #' country_map <- create_country_map()
+# create_region_map <- function() {
+#   data <- csv_data
+#   region_map <- list()
+#   for (i in 1:nrow(data)) {
+#     for (j in 1:ncol(data)) {
+#       country_name <- tolower(data[i, j])
+#       country_map[[country_name]] <- i
+#     }
+#   }
+#   country_map
+# }
 
 
 #' Returns the country number based off the levenstein distance being
@@ -31,7 +31,7 @@ create_country_map <- function() {
 #' the data. If the distance is less than a threshold `x`, it returns the
 #' index of the matching row which is the country number.
 #'
-#' @param country A string representing the country name to search for.
+#' @param region A string representing the region name to search for.
 #' @param x A numeric threshold for the Levenshtein distance.
 #'
 #' @return The row index of the closest matching country
@@ -39,8 +39,9 @@ create_country_map <- function() {
 #' @examples
 #' country_number <- get_country_number_with_levenshtein_distance("germany", 3)
 #' @export
-get_country_number_with_levenshtein_distance <- function(country, x) {
-  data <- csv_data
+get_region_number_with_levenshtein_distance <- function(country,
+                                                        distance, csv_path) {
+  data <- read.csv(here(csv_path), header = FALSE)
   for (i in 1:nrow(data)) {
     row <- data[i, ]
     for (j in 1:length(row)) {
@@ -49,7 +50,7 @@ get_country_number_with_levenshtein_distance <- function(country, x) {
         break
       }
       if (levenshtein_distance_lesser_than(toString(value),
-                                           tolower(country), x)) {
+                                           tolower(country), distance)) {
         print(i)
         return(i)
       }
@@ -61,29 +62,27 @@ get_country_number_with_levenshtein_distance <- function(country, x) {
 
 #' Returns the country number based off the csv file
 #'
-#' This function first checks if a cached `country_map` exists and uses it for
-#' fast lookup. If not, it will compute the mapping by calling
-#' `create_country_map`.
-#' The function tries to match the input `country` with names in the map.
+#' The function tries to match the input region with names in the csv.
 #' It also attempts to clean the country name by removing common
 #' words like "and", "of", or "the".
 #' If a direct match isn't found, it uses the Levenshtein distance to search for
 #' a close match.
 #'
-#' @param country A string representing the country name to search for.
+#' @param region A string representing the region name to search for.
 #' @param x A numeric threshold for the Levenshtein distance.
+#' @param csv_path A string specifying the path of the csv which has
+#'                 alternative names for regins in its rows
+#' @param basic A boolean which sets whether levenshtein distance is used or not
 #'
-#' @return The row index of the closest matching country
+#' @return The row index of the closest matching region
 #'          if found; otherwise, -1.
 #' @examples
-#' country_number <- get_country_number("germany", 3)
+#' country_number <- get_region_number("germany", csv_path, 3)
 #' @export
-get_country_number <- function(country, x) {
-  number <- get_country_from_map(country = country)
-  if (number != -1) {
-    return(number)
-  }
-  data <- csv_data
+get_region_number <- function(region, csv_path, distance = 3, basic = FALSE) {
+  region <- gsub("\\b(and|of|the)\\b", "", region, ignore.case = TRUE)
+  region <- tolower(region)
+  data <- read.csv(here(csv_path), header = FALSE)
   for (i in 1:nrow(data)) {
     row <- data[i, ]
     for (j in 1:length(row)) {
@@ -93,11 +92,18 @@ get_country_number <- function(country, x) {
       }
       value <- toString(value)
       value <- gsub("\\b(and|of|the)\\b", "", value, ignore.case = TRUE)
-      if (levenshtein_distance_lesser_than(value,
-                                           country, x)) {
-        return(i)
+      value <- tolower(value)
+      if (basic) {
+        if (value == region) {
+          return(i)
+        }
+      } else {
+        if (levenshtein_distance_lesser_than(value,
+                                             region, distance)) {
+          return(i)
+        }
       }
-      if (abbreviated(country, value)) {
+      if (abbreviated(region, value)) {
         return(i)
       }
     }
@@ -105,28 +111,21 @@ get_country_number <- function(country, x) {
   -1
 }
 
-get_country_from_map <- function(country) {
-  if (!exists("country_map", envir = .GlobalEnv)) {
-    country_map <<- create_country_map()
+get_region_from_map <- function(region, csv_path) {
+  if (!exists("region_map", envir = .GlobalEnv)) {
+    region_map <<- create_region_map(csv_path)
   }
-  country <- tolower(country)
-  if (country %in% names(country_map)) {
-    return(country_map[[country]])
+  region <- tolower(region)
+  if (region %in% names(region_map)) {
+    return(region_map[[region]])
   }
-  country <- gsub("\\b(and|of|the)\\b", "", country, ignore.case = TRUE)
-  if (country %in% names(country_map)) {
-    return(country_map[[country]])
+  region <- gsub("\\b(and|of|the)\\b", "", region, ignore.case = TRUE)
+  if (region %in% names(region_map)) {
+    return(region_map[[region]])
   }
   -1
 }
 
-get_country_number_basic <- function(country) {
-  number <- get_country_from_map(country = country)
-  if (number != -1) {
-    return(number)
-  }
-  -1
-}
 
 
 #' Calculates the Levenshtein distance between two strings and checks
@@ -145,6 +144,68 @@ levenshtein_distance_lesser_than <- function(str1, str2, x) {
   dist < x
 }
 
+
+#' Checks if a name is an acronym of another.
+#'
+#' @param str1 A string representing the first name.
+#' @param str2 A string representing the second name.
+#'
+#' @return TRUE if the first string is an acronym of the second;
+#'         otherwise, FALSE.
+#' @examples
+#' acronym <- is_acronym("us", "united states")
+is_acronym <- function(str1, str2) {
+  str1 <- gsub(" ", "", str1)
+  words <- unlist(strsplit(tolower(str2), "\\s+"))
+  if (nchar(str1) != length(words)) {
+    return(FALSE)
+  }
+  for (i in 1:nchar(str1)) {
+    if (substr(str1, i, i) != substr(words[i], 1, 1)){
+      return(FALSE)
+    }
+  }
+  return (TRUE)
+}
+
+#' Checks if a name is a shortened version of another using a . to represent 
+#' a shortened string.
+#'
+#' @param str1 A string representing the first name.
+#' @param str2 A string representing the second name.
+#'
+#' @return TRUE if the first string is an shortened version of the second;
+#'         otherwise, FALSE.
+#' @examples
+#' shortened <- is_shortened("un.", "united")
+is_shortened <- function(str1, str2) {
+  words1 <- unlist(strsplit(tolower(str1), "\\s+"))
+  words2 <- unlist(strsplit(tolower(str2), "\\s+"))
+  if (length(words1) != length(words2)) {
+    return(FALSE)
+  }
+
+  for (i in 1:length(words1)) {
+    if (words1[i] != words2[i]) {
+      for (j in 1:nchar(words1[i])) {
+        if (substr(words1[i], j, j) == ".") {
+          if (j != nchar(words1[i])) {
+            return(FALSE)
+          } 
+        } else {
+          if (substr(words1[i], j, j) != substr(words2[i], j, j)) {
+            return(FALSE)
+          }
+          if (j == nchar(words1[i])) {
+            return(FALSE)
+          }
+        }
+      }
+    }
+  }
+  return(TRUE)
+}
+
 #' Checks if two country names are abbreviations of each other.
 #'
 #' @param str1 A string representing the first country name.
@@ -155,18 +216,16 @@ levenshtein_distance_lesser_than <- function(str1, str2, x) {
 #' @examples
 #' is_abbreviation <- abbreviated("us", "united states")
 abbreviated <- function(str1, str2) {
-  while (nchar(str1) > 0 && nchar(str2) > 0) {
-    if (substring(str1, 0, 1) == ".") {
-      str1 <- substring(str1, 3)
-      str2 <- sub("^\\S+\\s*", "", str2)
-    } else if (substring(str1, 0, 1) == substring(str2, 0, 1)) {
-      str1 <- substring(str1, 2)
-      str2 <- substring(str2, 2)
-    } else {
-      return(FALSE)
-    }
-  }
-  str1 == str2
+  str1 <- tolower(str1)
+  str2 <- tolower(str2)
+
+  return(
+    is_acronym(str1, str2) ||
+    is_acronym(str2, str1) || 
+    is_shortened(str1, str2) || 
+    is_shortened(str2, str1)
+  )
+
 }
 
 #' Compares if two countries are the same based on their Levenshtein distance.
@@ -181,11 +240,13 @@ abbreviated <- function(str1, str2) {
 #' @examples
 #' are_same <- compare_nearest_country("germany", "germnay", 3)
 #' @export
-compare_nearest_country <- function(country1, country2, max_distance) {
-  number1 <- get_country_number_with_levenshtein_distance(country1,
-                                                          max_distance)
-  number2 <- get_country_number_with_levenshtein_distance(country2,
-                                                          max_distance)
+compare_nearest_country <- function(country1, country2, max_distance, csv_path) {
+  number1 <- get_region_number_with_levenshtein_distance(country1,
+                                                          max_distance,
+                                                          csv_path)
+  number2 <- get_region_number_with_levenshtein_distance(country2,
+                                                          max_distance,
+                                                          csv_path)
   number1 == number2
 }
 
