@@ -87,7 +87,7 @@ get_region_number <- function(region, csv_path, distance = 3, basic = FALSE) {
     row <- data[i, ]
     for (j in 1:length(row)) {
       value <- row[j]
-      if (length(value) == 0) {
+      if (length(value) == 0 || is.na(value)) {
         break
       }
       value <- toString(value)
@@ -131,8 +131,8 @@ get_region_from_map <- function(region, csv_path) {
 #' Calculates the Levenshtein distance between two strings and checks
 #'  if it is less than a threshold.
 #'
-#' @param str1 A string representing the first country name.
-#' @param str2 A string representing the second country name.
+#' @param str1 A string representing the first name.
+#' @param str2 A string representing the second name.
 #' @param x A numeric threshold for the Levenshtein distance.
 #'
 #' @return TRUE if the Levenshtein distance is less than `x`; otherwise, FALSE.
