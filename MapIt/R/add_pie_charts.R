@@ -31,6 +31,10 @@ library(ggnewscale)
 #' @export
 add_pie_charts <- function(data, x, y, attributes,
                            legend_title = NULL, pie_scale = 1) {
+  
+  for (attribute in attributes) {
+    data <- data[!is.na(data[[attribute]]), ]
+  }
   layers <- list(
                  new_scale("fill"),
                  geom_scatterpie(aes_string(x = x, y = y),
