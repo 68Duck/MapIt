@@ -47,8 +47,8 @@ euclidean_distance <- function(point1, point2) {
 #' @import dplyr
 #' @import purrr
 #' @import clue
-find_closest_rects <- function(data, small_country_area, width, height) {
-  country_bboxes <- data %>%
+find_closest_rects <- function(data, small_region_area, width, height) {
+  region_bboxes <- data %>%
     mutate(
       bbox = purrr::map(geometry, st_bbox),
       xmin = purrr::map_dbl(bbox, 1),
@@ -58,8 +58,8 @@ find_closest_rects <- function(data, small_country_area, width, height) {
     ) %>%
     select(name, xmin, ymin, xmax, ymax)
 
-  country_bboxes$area <- (country_bboxes$xmax - country_bboxes$xmin) *
-    (country_bboxes$ymax - country_bboxes$ymin)
+  region_bboxes$area <- (region_bboxes$xmax - region_bboxes$xmin) *
+    (region_bboxes$ymax - region_bboxes$ymin)
 
   bounding_box <- st_bbox(data)
   bbox_polygon <- st_as_sfc(bounding_box)
@@ -96,21 +96,21 @@ find_closest_rects <- function(data, small_country_area, width, height) {
   rectangles_centroids <- st_centroid(valid_rectangles_sf)
   rectangles_centroids <- st_set_crs(rectangles_centroids, st_crs(data))
 
-  small_countries <- country_bboxes[country_bboxes$area < small_country_area, ]
+  small_regions <- region_bboxes[region_bboxes$area < small_region_area, ]
 
-  distances_matrix <- matrix(0, nrow(small_countries),
+  distances_matrix <- matrix(0, nrow(small_regions),
                              length(rectangles_centroids))
 
-  for (i in 1:nrow(small_countries)) {
-    selected_country <- small_countries[i, ]
-    selected_country_centroid <- st_centroid(selected_country)
-    selected_country_centroid <- st_set_crs(selected_country_centroid,
+  for (i in 1:nrow(small_regions)) {
+    selected_region <- small_regions[i, ]
+    selected_region_centroid <- st_centroid(selected_region)
+    selected_region_centroid <- st_set_crs(selected_region_centroid,
                                             st_crs(data))
-    country_point <- st_coordinates(selected_country_centroid)
+    region_point <- st_coordinates(selected_region_centroid)
 
     for (j in 1:length(rectangles_centroids)) {
       rect_point <- st_coordinates(rectangles_centroids[j])
-      distance <- euclidean_distance(rect_point, country_point)
+      distance <- euclidean_distance(rect_point, region_point)
       distances_matrix[i, j] <- distance
     }
   }
@@ -124,34 +124,49 @@ find_closest_rects <- function(data, small_country_area, width, height) {
 
   optimal_assignment <- solve_LSAP(distances_matrix)
 
-  closest_rectangles_df <- data.frame(
-    country_name = character(),
-    closest_rectangle_sf = I(list()),
-    country_point = I(list()),
-    rectangle_point = I(list()),
-    stringsAsFactors = FALSE
-  )
+  # closest_rectangles_df <- data.frame(
+  #   country_name = character(),
+  #   closest_rectangle_sf = I(list()),
+  #   country_point = I(list()),
+  #   rectangle_point = I(list()),
+  #   stringsAsFactors = FALSE
+  # )
+  data$region_point.X <- NA
+  data$region_point.Y <- NA
+  data$rectangle_point.X <- NA
+  data$rectangle_point.Y <- NA
 
-  for (i in 1:nrow(small_countries)) {
-    selected_country <- small_countries[i, ]
-    selected_country_centroid <- st_centroid(selected_country)
-    selected_country_centroid <- st_set_crs(selected_country_centroid,
+
+  for (i in 1:nrow(small_regions)) {
+    selected_region <- small_regions[i, ]
+    selected_region_centroid <- st_centroid(selected_region)
+    selected_region_centroid <- st_set_crs(selected_region_centroid,
                                             st_crs(data))
-    country_point <- st_coordinates(selected_country_centroid)
+    region_point <- st_coordinates(selected_region_centroid)
 
     closest_rectangle_index <- optimal_assignment[i]
     closest_rectangle <- valid_rectangles_sf[closest_rectangle_index]
     closest_rectangle_centroid <- st_centroid(closest_rectangle)
     closest_rectangle_point <- st_coordinates(closest_rectangle_centroid)
 
-    closest_rectangles_df <- rbind(closest_rectangles_df, data.frame(
-      country_name = selected_country$name,
-      country_point = country_point,
-      closest_rectangle_sf = closest_rectangle,
-      rectangle_point = closest_rectangle_point
-    ))
+
+    data$region_point.X[data$name == selected_region$name] <- region_point[1]
+    data$region_point.Y[data$name == selected_region$name] <- region_point[2]
+    data$rectangle_point.X[data$name == selected_region$name] <- closest_rectangle_point[1]
+    data$rectangle_point.Y[data$name == selected_region$name] <- closest_rectangle_point[2]
+    # data$region_point[selected_region] <- region_point
+    # data$country_point.Y[selected_region] <- region_point[2]
+    # data$rectangle_point.X[selected_region] <- closest_rectangle_point[1]
+    # data$rectangle_point.Y[selected_region] <- closest_rectangle_point[2]
+
+    # closest_rectangles_df <- rbind(closest_rectangles_df, data.frame(
+    #   country_name = selected_region$name,
+    #   country_point = region_point,
+    #   closest_rectangle_sf = closest_rectangle,
+    #   rectangle_point = closest_rectangle_point
+    # ))
   }
-  closest_rectangles_df
+  data
 }
 
 
@@ -159,14 +174,14 @@ find_closest_rects <- function(data, small_country_area, width, height) {
 #' area is too small
 #'
 #' @param data The map data which should include simple features information.
-#' @param small_country_area A value representing the threshold area below which
+#' @param small_region_area A value representing the threshold area below which
 #'                   countries are considered small.
 #' @param width The width of the free space the small countries
 #'              should be assigned
 #' @param height The height of the free space the small countries
 #'              should be assigned
-#' @param label_x The column name for the x-coordinate of country labels.
-#' @param label_y The column name for the y-coordinate of country labels.
+#' @param label_x The column name for the x-coordinate of region labels.
+#' @param label_y The column name for the y-coordinate of region labels.
 #'
 #' @return A data frame containing the original
 #'         data along with updated label positions.
@@ -174,18 +189,18 @@ find_closest_rects <- function(data, small_country_area, width, height) {
 #' @examples
 #' # Assuming `world_data` is a valid `sf` object containing world map data:
 #' modified_labels <- modify_label_positions(world_data,
-#'                                           small_country_area = 100000,
+#'                                           small_region_area = 100000,
 #'                                           width = 1, height = 1)
 #'
 #' @import ggplot2
 #' @import sf
 #' @import dplyr
 #' @export
-modify_label_positions <- function(data, small_country_area, width, height,
+modify_label_positions <- function(data, small_region_area, width, height,
                                    label_x = "label_x", label_y = "label_y") {
 
-  df <- find_closest_rects(data = data, small_country_area = small_country_area,
-                           width = width, height = height)
+  data <- find_closest_rects(data = data, small_region_area = small_region_area,
+                             width = width, height = height)
 
   new_data <- data %>%
     mutate(
@@ -223,15 +238,18 @@ modify_label_positions <- function(data, small_country_area, width, height,
 #' @import sf
 #' @export
 add_lines_to_labels <- function(data, width, height) {
-  if ("country_point" %in% colnames(data) &&
-      "rectangle_point" %in% colnames(data)) {
-    geom_segment(data = data, aes(x = country_point.X,
-                                  y = country_point.Y,
+  # print(colnames(data))
+  if ("region_point.X" %in% colnames(data) &&
+      "region_point.Y" %in% colnames(data) &&
+      "rectangle_point.X" %in% colnames(data) &&
+      "rectangle_point.Y" %in% colnames(data)) {
+    return(geom_segment(data = data, aes(x = region_point.X,
+                                  y = region_point.Y,
                                   xend = rectangle_point.X,
                                   yend = rectangle_point.Y),
-                color = "blue", size = 1)
+                color = "blue", size = 1))
   } else {
-    stop(paste("country_point and rectangle_point must be colums in the data.",
+    stop(paste("region_point and rectangle_point must be colums in the data.",
                "Please call modify_label_positions()",
                "first to ensure they exist."))
   }
