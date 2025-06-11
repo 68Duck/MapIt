@@ -188,7 +188,6 @@ modify_label_positions <- function(data, small_country_area, width, height,
                            width = width, height = height)
 
   new_data <- data %>%
-    left_join(df, by = c("name" = "country_name")) %>%
     mutate(
       label_x = ifelse(!is.na(rectangle_point.X),
                        rectangle_point.X, label_x),
@@ -224,9 +223,16 @@ modify_label_positions <- function(data, small_country_area, width, height,
 #' @import sf
 #' @export
 add_lines_to_labels <- function(data, width, height) {
-  geom_segment(data = data, aes(x = country_point.X,
-                                y = country_point.Y,
-                                xend = rectangle_point.X,
-                                yend = rectangle_point.Y),
-               color = "blue", size = 1)
+  if ("country_point" %in% colnames(data) &&
+      "rectangle_point" %in% colnames(data)) {
+    geom_segment(data = data, aes(x = country_point.X,
+                                  y = country_point.Y,
+                                  xend = rectangle_point.X,
+                                  yend = rectangle_point.Y),
+                color = "blue", size = 1)
+  } else {
+    stop(paste("country_point and rectangle_point must be colums in the data.",
+               "Please call modify_label_positions()",
+               "first to ensure they exist."))
+  }
 }

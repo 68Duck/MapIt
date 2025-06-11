@@ -42,7 +42,7 @@ library(here)
 #' country_number <- get_country_number_with_edit_distance("germany", 3)
 #' @export
 get_region_number_with_edit_distance <- function(country, distance,
-                                                 csv_path, method = "lv") {
+                                                 csv_path, method = "qgram") {
   data <- read.csv(here(csv_path), header = FALSE)
   for (i in 1:nrow(data)) {
     row <- data[i, ]
@@ -82,7 +82,7 @@ get_region_number_with_edit_distance <- function(country, distance,
 #' @examples
 #' country_number <- get_region_number("germany", csv_path, 3)
 #' @export
-get_region_number <- function(region, csv_path, distance = 3, method = "lv",
+get_region_number <- function(region, csv_path, distance = 3, method = "qgram",
                               basic = FALSE) {
   region <- gsub("\\b(and|of|the)\\b", "", region, ignore.case = TRUE)
   region <- tolower(region)
@@ -143,7 +143,7 @@ get_region_from_map <- function(region, csv_path) {
 #' @examples
 #' is_closer <- distance_lesser_than("germany", "germnay", 3)
 #' @export
-distance_lesser_than <- function(str1, str2, x, method = "lv") {
+distance_lesser_than <- function(str1, str2, x, method = "qgram") {
   valid_methods <- c("osa", "lv", "dl", "hamming",
                      "lcs", "qgram", "cosine",
                      "jaccard", "jw", "soundex")

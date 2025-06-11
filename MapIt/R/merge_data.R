@@ -59,7 +59,7 @@ merge_data_with_edit_distance <- function(region_data, auxiliary_data,
                                           region_name,
                                           auxiliary_region_name,
                                           distance = 3, 
-                                          method = "lv") {
+                                          method = "qgram") {
   region_data$region_number <- seq_len(nrow(region_data))
   original_regions <- region_data[[region_name]]
   match_indices <- match(auxiliary_data[[auxiliary_region_name]],
@@ -120,7 +120,7 @@ merge_data_with_csv <- function(region_data, auxiliary_data,
                                 auxiliary_region_name,
                                 csv_path,
                                 distance = 1,
-                                method = "lv",
+                                method = "qgram",
                                 basic = FALSE) {
   region_data$region_number <-
     apply(region_data, 1,
@@ -170,7 +170,7 @@ merge_data_with_ui <- function(region_data, auxiliary_data,
                                auxiliary_region_name,
                                csv_path,
                                distance = 3, 
-                               method = "lv") {
+                               method = "qgram") {
   region_data$region_number <-
     apply(region_data, 1,
           function(row) get_region_number(row[region_name],
@@ -206,7 +206,7 @@ merge_data_with_ui <- function(region_data, auxiliary_data,
 #' @examples
 #' country_data <- run_region_matching_ui(country_data, "country")
 run_region_matching_ui <- function(region_data, region_name, csv_path,
-                                   distance = 3, method = "lv") {
+                                   distance = 3, method = "qgram") {
   used_region_numbers <- region_data$region_number
   regions_to_remove <- c()
   manually_assigned_regions <- list()
@@ -281,7 +281,7 @@ save_to_csv <- function(regions, csv_path) {
 
     data[region_number, first_na_col] <- region
   }
-  write.csv(data, "test.csv", row.names = FALSE, header = FALSE)
+  write.csv(data, "test.csv", row.names = FALSE)
 }
 
 
