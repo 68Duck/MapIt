@@ -199,7 +199,7 @@ merge_data_with_ui <- function(region_data, auxiliary_data,
 #' @param region_data A data frame containing the region data.
 #' @param region_name A string specifying the column name in `region_data`
 #'                     that contains the region names.
-#' #' @param csv_path A string specifying the path of the csv which has
+#' @param csv_path A string specifying the path of the csv which has
 #'                 alternative names for regins in its rows
 #'
 #' @return An `sf` data frame containing new region numbers
