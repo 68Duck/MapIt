@@ -48,6 +48,7 @@ euclidean_distance <- function(point1, point2) {
 #' @import purrr
 #' @import clue
 find_closest_rects <- function(data, small_region_area, width, height, attribute = NULL) {
+  sf::sf_use_s2(FALSE)
   region_bboxes <- data %>%
     mutate(
       bbox = purrr::map(geometry, st_bbox),
