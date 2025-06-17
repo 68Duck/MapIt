@@ -99,7 +99,6 @@ find_closest_rects <- function(data, small_region_area, width, height, attribute
 
   if (is.null(attribute)) {
     small_regions <- region_bboxes[region_bboxes$area < small_region_area, ]
-    # print(region_bboxes[[attribute]])
   } else {
     small_regions <- region_bboxes[(region_bboxes$area < small_region_area) & (!is.na(region_bboxes[[attribute]])), ]
   }
@@ -125,18 +124,15 @@ find_closest_rects <- function(data, small_region_area, width, height, attribute
   n_rects <- ncol(distances_matrix)
 
   if (n_countries > n_rects) {
+    stop(paste("The values for width and height you have chosen are too large,",
+      "meaning that there is not enough free space for the diagrams to be",
+      "placed into. Please decrease the size of the width and height.")
+    )
     return(NULL)
   }
 
   optimal_assignment <- solve_LSAP(distances_matrix)
 
-  # closest_rectangles_df <- data.frame(
-  #   country_name = character(),
-  #   closest_rectangle_sf = I(list()),
-  #   country_point = I(list()),
-  #   rectangle_point = I(list()),
-  #   stringsAsFactors = FALSE
-  # )
   data$region_point.X <- NA
   data$region_point.Y <- NA
   data$rectangle_point.X <- NA
@@ -160,17 +156,6 @@ find_closest_rects <- function(data, small_region_area, width, height, attribute
     data$region_point.Y[data$name == selected_region$name] <- region_point[2]
     data$rectangle_point.X[data$name == selected_region$name] <- closest_rectangle_point[1]
     data$rectangle_point.Y[data$name == selected_region$name] <- closest_rectangle_point[2]
-    # data$region_point[selected_region] <- region_point
-    # data$country_point.Y[selected_region] <- region_point[2]
-    # data$rectangle_point.X[selected_region] <- closest_rectangle_point[1]
-    # data$rectangle_point.Y[selected_region] <- closest_rectangle_point[2]
-
-    # closest_rectangles_df <- rbind(closest_rectangles_df, data.frame(
-    #   country_name = selected_region$name,
-    #   country_point = region_point,
-    #   closest_rectangle_sf = closest_rectangle,
-    #   rectangle_point = closest_rectangle_point
-    # ))
   }
   data
 }
