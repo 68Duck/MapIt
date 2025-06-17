@@ -2,7 +2,7 @@ library(ggplot2)
 library(rnaturalearth)
 library(sf)
 library(ggnewscale)
-library(cowplot)
+# library(cowplot)
 
 #' Add a Bar Chart Layer to a ggplot layer
 #'
