@@ -17,8 +17,8 @@ country_data <- ne_countries(scale = 10, type = "countries",
                              continent = "south america",
                              returnclass = "sf")
 
-data <- merge_data_with_ui(country_data, gdp_data,
-                   "name", "Country/Economy")
+data <- merge_data_with_csv(country_data, gdp_data,
+                   "name", "Country/Economy", "reduced_country_names.csv", distance = 1)
 
 point_size <- 20
 

@@ -16,13 +16,22 @@ country_data <- ne_countries(scale = 10, type = "countries",
                              continent = "south america",
                              returnclass = "sf")
 
-# print(gdp_data[["Country/Economy"]])
 
-data <- merge_data_with_edit_distance(country_data, gdp_data,
-                   "name", "Country/Economy")
+data <- merge_data_with_ui(country_data, gdp_data,
+                   "name", "Country/Economy", "test.csv", 0)
 
 
 data$`Total GDP (US$MM)` <- as.numeric(gsub(",", "", data$`Total GDP (US$MM)`))
 
 map <- choropleth(data, `Total GDP (US$MM)`)
+
+for (i in 1:nrow(data)) {
+  cat(
+    data$region_number[i], " | ",
+    data$name[i], " | ",
+    data[["Country/Economy"]][i], 
+    data$`Total GDP (US$MM)`[i],
+    "\n"
+  )
+}
 print(map)

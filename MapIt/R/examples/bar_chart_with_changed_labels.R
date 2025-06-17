@@ -6,7 +6,7 @@ source(here("R/add_bar_charts.R"))
 source(here("R/choropleth.R"))
 source(here("R/merge_data.R"))
 
-# data <- ne_countries(returnclass = "sf", scale = 10, continent = "africa")
+data <- ne_countries(returnclass = "sf", scale = 10, continent = "africa")
 
 width <- 6
 height <- 6
@@ -24,15 +24,18 @@ country_data <- ne_countries(scale = 10, type = "countries",
 
 
 data <- merge_data_with_ui(country_data, gdp_data,
-                           "name", "Country/Economy")
+                           "name", "Country/Economy", "reduced_country_names.csv", 0)
 data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
                                           "Service (%)"), c("%"))
 
 
 
-data <- modify_label_positions(data = data,
-                               small_country_area = small_country_area,
-                               width = width, height = height)
+data <- modify_label_positions(data,
+                               small_country_area,
+                               width,
+                               height)
+
+print(colnames(data))
 
 map <- choropleth(data = data, fill = pop_est,
                   legend_title = "Population") +

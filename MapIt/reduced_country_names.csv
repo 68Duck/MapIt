@@ -1,259 +1,259 @@
-Country
-Indonesia
-Malaysia
-Chile
-Bolivia
-Peru
-Argentina
-Dhekelia
-Cyprus
-India
-China
-Israel
-Palestine
-Lebanon
-Ethiopia
-S. Sudan
-Somalia
-Kenya
-Malawi
-Tanzania
-Syria
-Somaliland
-France
-Suriname
-Guyana
-South Korea
-North Korea
-Morocco
-W. Sahara
-Costa Rica
-Nicaragua
-Congo
-Dem. Rep. Congo
-Bhutan
-Ukraine
-Belarus
-Namibia
-South Africa
-St-Martin
-Sint Maarten
-Oman
-Uzbekistan
-Kazakhstan
-Tajikistan
-Lithuania
-Brazil
-Uruguay
-Mongolia
-Russia
-Czechia
-Germany
-Estonia
-Latvia
-Norway
-Sweden
-Finland
-Vietnam
-Cambodia
-Luxembourg
-United Arab Emirates
-Belgium
-Georgia
-North Macedonia
-Albania
-Azerbaijan
-Kosovo
-Turkey
-Spain
-Laos
-Kyrgyzstan
-Armenia
-Denmark
-Libya
-Tunisia
-Romania
-Hungary
-Slovakia
-Poland
-Ireland
-United Kingdom
-Greece
-Zambia
-Sierra Leone
-Guinea
-Liberia
-Central African Rep.
-Sudan
-Djibouti
-Eritrea
-Austria
-Iraq
-Italy
-Switzerland
-Iran
-Netherlands
-Liechtenstein
-Côte d'Ivoire
-Serbia
-Mali
-Senegal
-Nigeria
-Benin
-Angola
-Croatia
-Slovenia
-Qatar
-Saudi Arabia
-Botswana
-Zimbabwe
-Pakistan
-Bulgaria
-Thailand
-San Marino
-Haiti
-Dominican Rep.
-Chad
-Kuwait
-El Salvador
-Guatemala
-Timor-Leste
-Brunei
-Monaco
-Algeria
-Mozambique
-eSwatini
-Burundi
-Rwanda
-Myanmar
-Bangladesh
-Andorra
-Afghanistan
-Montenegro
-Bosnia and Herz.
-Uganda
-USNB Guantanamo Bay
-Cuba
-Honduras
-Ecuador
-Colombia
-Paraguay
-Brazilian I.
-Portugal
-Moldova
-Turkmenistan
-Jordan
-Nepal
-Lesotho
-Cameroon
-Gabon
-Niger
-Burkina Faso
-Togo
-Ghana
-Guinea-Bissau
-Gibraltar
-United States of America
-Canada
-Mexico
-Belize
-Panama
-Venezuela
-Papua New Guinea
-Egypt
-Yemen
-Mauritania
-Eq. Guinea
-Gambia
-Hong Kong
-Vatican
-N. Cyprus
-Cyprus U.N. Buffer Zone
-Siachen Glacier
-Baikonur
-Akrotiri
-Southern Patagonian Ice Field
-Bir Tawil
-Antarctica
-Australia
-Greenland
-Fiji
-New Zealand
-New Caledonia
-Madagascar
-Philippines
-Sri Lanka
-Curaçao
-Aruba
-Bahamas
-Turks and Caicos Is.
-Taiwan
-Japan
-St. Pierre and Miquelon
-Iceland
-Pitcairn Is.
-Fr. Polynesia
-Fr. S. Antarctic Lands
-Seychelles
-Kiribati
-Marshall Is.
-Trinidad and Tobago
-Grenada
-St. Vin. and Gren.
-Barbados
-Saint Lucia
-Dominica
-U.S. Minor Outlying Is.
-Montserrat
-Antigua and Barb.
-St. Kitts and Nevis
-U.S. Virgin Is.
-St-Barthélemy
-Puerto Rico
-Anguilla
-British Virgin Is.
-Jamaica
-Cayman Is.
-Bermuda
-Heard I. and McDonald Is.
-Saint Helena
-Mauritius
-Comoros
-São Tomé and Principe
-Cabo Verde
-Malta
-Jersey
-Guernsey
-Isle of Man
-Åland
-Faeroe Is.
-Indian Ocean Ter.
-Br. Indian Ocean Ter.
-Singapore
-Norfolk Island
-Cook Is.
-Tonga
-Wallis and Futuna Is.
-Samoa
-Solomon Is.
-Tuvalu
-Maldives
-Nauru
-Micronesia
-S. Geo. and the Is.
-Falkland Is.
-Vanuatu
-Niue
-American Samoa
-Palau
-Guam
-N. Mariana Is.
-Bahrain
-Coral Sea Is.
-Spratly Is.
-Clipperton I.
-Macao
-Ashmore and Cartier Is.
-Bajo Nuevo Bank
-Serranilla Bank
-Scarborough Reef
+"Country",NA
+"Indonesia",NA
+"Malaysia",NA
+"Chile",NA
+"Bolivia","Bolivia, Plurinational State of"
+"Peru",NA
+"Argentina",NA
+"Dhekelia",NA
+"Cyprus",NA
+"India",NA
+"China",NA
+"Israel",NA
+"Palestine",NA
+"Lebanon",NA
+"Ethiopia",NA
+"S. Sudan","South Sudan"
+"Somalia",NA
+"Kenya",NA
+"Malawi",NA
+"Tanzania","Tanzania, United Republic of"
+"Syria","Syrian Arab Republic"
+"Somaliland",NA
+"France",NA
+"Suriname",NA
+"Guyana",NA
+"South Korea","Korea, Republic of"
+"North Korea",NA
+"Morocco",NA
+"W. Sahara",NA
+"Costa Rica",NA
+"Nicaragua",NA
+"Congo",NA
+"Dem. Rep. Congo","Congo, Democratic Republic of the"
+"Bhutan",NA
+"Ukraine",NA
+"Belarus",NA
+"Namibia",NA
+"South Africa",NA
+"St-Martin",NA
+"Sint Maarten",NA
+"Oman",NA
+"Uzbekistan",NA
+"Kazakhstan",NA
+"Tajikistan",NA
+"Lithuania",NA
+"Brazil",NA
+"Uruguay",NA
+"Mongolia",NA
+"Russia","Russian Federation"
+"Czechia",NA
+"Germany",NA
+"Estonia",NA
+"Latvia",NA
+"Norway",NA
+"Sweden",NA
+"Finland",NA
+"Vietnam",NA
+"Cambodia",NA
+"Luxembourg",NA
+"United Arab Emirates",NA
+"Belgium",NA
+"Georgia",NA
+"North Macedonia",NA
+"Albania",NA
+"Azerbaijan",NA
+"Kosovo",NA
+"Turkey",NA
+"Spain",NA
+"Laos",NA
+"Kyrgyzstan",NA
+"Armenia",NA
+"Denmark",NA
+"Libya",NA
+"Tunisia",NA
+"Romania",NA
+"Hungary",NA
+"Slovakia",NA
+"Poland",NA
+"Ireland",NA
+"United Kingdom",NA
+"Greece",NA
+"Zambia",NA
+"Sierra Leone",NA
+"Guinea",NA
+"Liberia",NA
+"Central African Rep.",NA
+"Sudan",NA
+"Djibouti",NA
+"Eritrea",NA
+"Austria",NA
+"Iraq",NA
+"Italy",NA
+"Switzerland",NA
+"Iran",NA
+"Netherlands",NA
+"Liechtenstein",NA
+"Côte d'Ivoire",NA
+"Serbia",NA
+"Mali",NA
+"Senegal",NA
+"Nigeria",NA
+"Benin",NA
+"Angola",NA
+"Croatia",NA
+"Slovenia",NA
+"Qatar",NA
+"Saudi Arabia",NA
+"Botswana",NA
+"Zimbabwe",NA
+"Pakistan",NA
+"Bulgaria",NA
+"Thailand",NA
+"San Marino",NA
+"Haiti",NA
+"Dominican Rep.",NA
+"Chad",NA
+"Kuwait",NA
+"El Salvador",NA
+"Guatemala",NA
+"Timor-Leste",NA
+"Brunei",NA
+"Monaco",NA
+"Algeria",NA
+"Mozambique",NA
+"eSwatini",NA
+"Burundi",NA
+"Rwanda",NA
+"Myanmar",NA
+"Bangladesh",NA
+"Andorra",NA
+"Afghanistan",NA
+"Montenegro",NA
+"Bosnia and Herz.",NA
+"Uganda",NA
+"USNB Guantanamo Bay",NA
+"Cuba",NA
+"Honduras",NA
+"Ecuador",NA
+"Colombia",NA
+"Paraguay",NA
+"Brazilian I.",NA
+"Portugal",NA
+"Moldova","Moldova, Republic of"
+"Turkmenistan",NA
+"Jordan",NA
+"Nepal",NA
+"Lesotho",NA
+"Cameroon",NA
+"Gabon",NA
+"Niger",NA
+"Burkina Faso",NA
+"Togo",NA
+"Ghana",NA
+"Guinea-Bissau",NA
+"Gibraltar",NA
+"United States of America",NA
+"Canada",NA
+"Mexico",NA
+"Belize",NA
+"Panama",NA
+"Venezuela","Venezuela, Bolivarian Republic of"
+"Papua New Guinea",NA
+"Egypt",NA
+"Yemen",NA
+"Mauritania",NA
+"Eq. Guinea",NA
+"Gambia",NA
+"Hong Kong",NA
+"Vatican",NA
+"N. Cyprus",NA
+"Cyprus U.N. Buffer Zone",NA
+"Siachen Glacier",NA
+"Baikonur",NA
+"Akrotiri",NA
+"Southern Patagonian Ice Field",NA
+"Bir Tawil",NA
+"Antarctica",NA
+"Australia",NA
+"Greenland",NA
+"Fiji",NA
+"New Zealand",NA
+"New Caledonia",NA
+"Madagascar",NA
+"Philippines",NA
+"Sri Lanka",NA
+"Curaçao",NA
+"Aruba",NA
+"Bahamas",NA
+"Turks and Caicos Is.",NA
+"Taiwan",NA
+"Japan",NA
+"St. Pierre and Miquelon",NA
+"Iceland",NA
+"Pitcairn Is.",NA
+"Fr. Polynesia",NA
+"Fr. S. Antarctic Lands",NA
+"Seychelles",NA
+"Kiribati",NA
+"Marshall Is.",NA
+"Trinidad and Tobago",NA
+"Grenada",NA
+"St. Vin. and Gren.","Saint Vincent and the Grenadines"
+"Barbados",NA
+"Saint Lucia",NA
+"Dominica",NA
+"U.S. Minor Outlying Is.",NA
+"Montserrat",NA
+"Antigua and Barb.",NA
+"St. Kitts and Nevis","Saint Kitts and Nevis"
+"U.S. Virgin Is.",NA
+"St-Barthélemy",NA
+"Puerto Rico",NA
+"Anguilla",NA
+"British Virgin Is.",NA
+"Jamaica",NA
+"Cayman Is.",NA
+"Bermuda",NA
+"Heard I. and McDonald Is.",NA
+"Saint Helena",NA
+"Mauritius",NA
+"Comoros",NA
+"São Tomé and Principe","Sao Tome and Principe"
+"Cabo Verde",NA
+"Malta",NA
+"Jersey",NA
+"Guernsey",NA
+"Isle of Man",NA
+"Åland",NA
+"Faeroe Is.",NA
+"Indian Ocean Ter.",NA
+"Br. Indian Ocean Ter.",NA
+"Singapore",NA
+"Norfolk Island",NA
+"Cook Is.",NA
+"Tonga",NA
+"Wallis and Futuna Is.",NA
+"Samoa",NA
+"Solomon Is.",NA
+"Tuvalu",NA
+"Maldives",NA
+"Nauru",NA
+"Micronesia","Micronesia, Federated States of"
+"S. Geo. and the Is.",NA
+"Falkland Is.",NA
+"Vanuatu",NA
+"Niue",NA
+"American Samoa",NA
+"Palau",NA
+"Guam",NA
+"N. Mariana Is.",NA
+"Bahrain",NA
+"Coral Sea Is.",NA
+"Spratly Is.",NA
+"Clipperton I.",NA
+"Macao",NA
+"Ashmore and Cartier Is.",NA
+"Bajo Nuevo Bank",NA
+"Serranilla Bank",NA
+"Scarborough Reef",NA

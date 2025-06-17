@@ -169,7 +169,7 @@ merge_data_with_ui <- function(region_data, auxiliary_data,
                                region_name,
                                auxiliary_region_name,
                                csv_path,
-                               distance = 3, 
+                               distance = 3,
                                method = "qgram") {
   region_data$region_number <-
     apply(region_data, 1,
@@ -281,7 +281,7 @@ save_to_csv <- function(regions, csv_path) {
 
     data[region_number, first_na_col] <- region
   }
-  write.csv(data, "test.csv", row.names = FALSE)
+  write.csv(data, csv_path, row.names = FALSE)
 }
 
 

@@ -16,9 +16,8 @@ country_data <- ne_countries(scale = 10, type = "countries",
                              continent = "south america",
                              returnclass = "sf")
 
-# print(gdp_data[["Country/Economy"]])
 
-data <- merge_data_with_edit_distance(country_data, gdp_data,
+data <- merge_data(country_data, gdp_data,
                    "name", "Country/Economy")
 
 

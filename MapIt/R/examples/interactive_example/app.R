@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 library(dplyr)
 library(rvest)
+library(here)
 
 source(here("R/add_lines.R"))
 source(here("R/add_bar_charts.R"))
@@ -29,7 +30,8 @@ ui <- fluidPage(
       selectInput("chart_type", "Choose chart type:",
                   choices = c("Bar Chart", "Pie Chart", "Star Plot")),
       selectInput("continent_choice", "Choose continent or whole world:",
-                  choices = c("africa", "europe", "world", "south america")),
+                  choices = c("Africa" = "africa", "Europe" = "europe",
+                              "World" = "world", "South America" = "south america")),
       conditionalPanel(
         condition = "input.chart_type == 'Bar Chart'",
         numericInput("size_choice", "Choose the size of the bar chart:",
@@ -58,25 +60,18 @@ server <- function(input, output) {
     table_nodes <- html_nodes(webpage, "table.wikitable")
     gdp_data <- html_table(table_nodes[[2]], fill = TRUE)
 
-    data <- merge_data_with_ui(data, gdp_data,
-                              "name", "Country/Economy")
+    data <- merge_data_with_csv(data, gdp_data,
+                                   "name", "Country/Economy", "reduced_country_names.csv")
     data <- convert_columns_to_number(data, c("Agricultural (%)", "Industrial (%)",
                   "Service (%)"), c("%"))
-    # if (input$continent_choice == "world") {
-    #   data <- ne_countries(returnclass = "sf", scale = 10)
-    # } else {
-    #   data <- ne_countries(returnclass = "sf", scale = 10,
-    #                        continent = input$continent_choice)
-
-    # }
-
     if (input$chart_type == "Bar Chart") {
         width <- input$size_choice
         height <- input$size_choice
         small_country_area <- input$size_choice * 15 / 6
-        data <- modify_label_positions(data = data,
-                                    small_country_area = small_country_area,
-                                    width = width, height = height)
+        data <- modify_label_positions(data,
+                                       small_country_area,
+                                       width, height,
+                                       attribute = "Agricultural (%)")
 
         validate(need(!is.null(data),
                       "Bar chart size is too large to fit on the map"))
@@ -92,9 +87,9 @@ server <- function(input, output) {
         width <- input$size_choice / 2
         height <- input$size_choice / 2
         pie_scale <- input$size_choice / 4
-        data <- modify_label_positions(data = data,
-                                    small_country_area = small_country_area,
-                                    width = width, height = height)
+        data <- modify_label_positions(data,
+                                       small_country_area,
+                                       width, height)
         map <- choropleth(data = data, fill = data$pop_rank,
                         legend_title = "Population rank") +
             add_lines_to_labels(data = data, width = width, height = height) +

@@ -40,7 +40,7 @@ add_stars <- function(df, attribute, width, height, star_size, legend_title,
   max_value <- max(df[[attribute]], na.rm = TRUE)
   no_stars <- 5
   for (i in 1:nrow(df)) {
-    value <- round(df[[attribute]][i] / max_value * no_stars, digits = 0)
+    value <- ceiling(df[[attribute]][i] / max_value * no_stars)
     data <- data.frame(x = c(1, 2, 3, 4, 5),
       y = c(1, 1, 1, 1, 1),
       colours = c(rep("Achieved", each = value),

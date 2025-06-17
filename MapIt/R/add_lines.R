@@ -47,7 +47,7 @@ euclidean_distance <- function(point1, point2) {
 #' @import dplyr
 #' @import purrr
 #' @import clue
-find_closest_rects <- function(data, small_region_area, width, height) {
+find_closest_rects <- function(data, small_region_area, width, height, attribute = NULL) {
   region_bboxes <- data %>%
     mutate(
       bbox = purrr::map(geometry, st_bbox),
@@ -55,8 +55,8 @@ find_closest_rects <- function(data, small_region_area, width, height) {
       ymin = purrr::map_dbl(bbox, 2),
       xmax = purrr::map_dbl(bbox, 3),
       ymax = purrr::map_dbl(bbox, 4)
-    ) %>%
-    select(name, xmin, ymin, xmax, ymax)
+    ) # %>%
+    #select(name, xmin, ymin, xmax, ymax)
 
   region_bboxes$area <- (region_bboxes$xmax - region_bboxes$xmin) *
     (region_bboxes$ymax - region_bboxes$ymin)
@@ -96,7 +96,12 @@ find_closest_rects <- function(data, small_region_area, width, height) {
   rectangles_centroids <- st_centroid(valid_rectangles_sf)
   rectangles_centroids <- st_set_crs(rectangles_centroids, st_crs(data))
 
-  small_regions <- region_bboxes[region_bboxes$area < small_region_area, ]
+  if (is.null(attribute)) {
+    small_regions <- region_bboxes[region_bboxes$area < small_region_area, ]
+    # print(region_bboxes[[attribute]])
+  } else {
+    small_regions <- region_bboxes[(region_bboxes$area < small_region_area) & (!is.na(region_bboxes[[attribute]])), ]
+  }
 
   distances_matrix <- matrix(0, nrow(small_regions),
                              length(rectangles_centroids))
@@ -197,18 +202,30 @@ find_closest_rects <- function(data, small_region_area, width, height) {
 #' @import dplyr
 #' @export
 modify_label_positions <- function(data, small_region_area, width, height,
-                                   label_x = "label_x", label_y = "label_y") {
+                                   label_x = "label_x", label_y = "label_y", attribute = NULL) {
 
   data <- find_closest_rects(data = data, small_region_area = small_region_area,
-                             width = width, height = height)
+                             width = width, height = height, attribute = attribute)
 
-  new_data <- data %>%
-    mutate(
-      label_x = ifelse(!is.na(rectangle_point.X),
-                       rectangle_point.X, label_x),
-      label_y = ifelse(!is.na(rectangle_point.Y),
-                       rectangle_point.Y, label_y)
-    )
+  if (is.null(attribute)) {
+    new_data <- data %>%
+      mutate(
+        label_x = ifelse(!is.na(rectangle_point.X),
+                        rectangle_point.X, label_x),
+        label_y = ifelse(!is.na(rectangle_point.Y),
+                        rectangle_point.Y, label_y)
+      )
+  } else {
+    new_data <- data %>% 
+      mutate(
+        label_x = ifelse(!is.na(rectangle_point.X) & !is.na(attribute),
+                        rectangle_point.X, label_x),
+        label_y = ifelse(!is.na(rectangle_point.Y) & !is.na(attribute),
+                        rectangle_point.Y, label_y)
+      )
+  }
+  # print(new_data %>% select(name, attribute), n = Inf)
+  # print(colnames(new_data))
   new_data
 }
 
@@ -238,7 +255,6 @@ modify_label_positions <- function(data, small_region_area, width, height,
 #' @import sf
 #' @export
 add_lines_to_labels <- function(data, width, height) {
-  # print(colnames(data))
   if ("region_point.X" %in% colnames(data) &&
       "region_point.Y" %in% colnames(data) &&
       "rectangle_point.X" %in% colnames(data) &&
