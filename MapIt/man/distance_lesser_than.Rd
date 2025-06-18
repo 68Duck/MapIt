@@ -5,7 +5,7 @@
 \title{Calculates the distance between two strings and checks
 if it is less than a threshold.}
 \usage{
-distance_lesser_than(str1, str2, x, method = "lv")
+distance_lesser_than(str1, str2, x, method = "qgram")
 }
 \arguments{
 \item{str1}{A string representing the first name.}

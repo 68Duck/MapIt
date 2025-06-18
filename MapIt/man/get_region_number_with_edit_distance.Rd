@@ -9,7 +9,7 @@ get_region_number_with_edit_distance(
   country,
   distance,
   csv_path,
-  method = "lv"
+  method = "qgram"
 )
 }
 \arguments{

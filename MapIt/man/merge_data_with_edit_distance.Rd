@@ -10,7 +10,7 @@ merge_data_with_edit_distance(
   region_name,
   auxiliary_region_name,
   distance = 3,
-  method = "lv"
+  method = "qgram"
 )
 }
 \arguments{

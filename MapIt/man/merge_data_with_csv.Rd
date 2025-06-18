@@ -11,7 +11,7 @@ merge_data_with_csv(
   auxiliary_region_name,
   csv_path,
   distance = 1,
-  method = "lv",
+  method = "qgram",
   basic = FALSE
 )
 }

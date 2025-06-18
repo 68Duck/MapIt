@@ -11,15 +11,16 @@ run_region_matching_ui(
   region_name,
   csv_path,
   distance = 3,
-  method = "lv"
+  method = "qgram"
 )
 }
 \arguments{
 \item{region_data}{A data frame containing the region data.}
 
 \item{region_name}{A string specifying the column name in \code{region_data}
-that contains the region names.
-#' @param csv_path A string specifying the path of the csv which has
+that contains the region names.}
+
+\item{csv_path}{A string specifying the path of the csv which has
 alternative names for regins in its rows}
 }
 \value{

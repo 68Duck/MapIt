@@ -4,7 +4,7 @@
 \alias{add_lines_to_labels}
 \title{Adds lines connecting small countries to their closest rectangles}
 \usage{
-add_lines_to_labels(data, width, height)
+add_lines_to_labels(data)
 }
 \arguments{
 \item{data}{The map data which should include simple features information.}
@@ -29,6 +29,6 @@ world_data <- modify_label_positions(world_data,
                                      width = 1, height = 1) +
 plot_with_lines <- ggplot() +
   geom_sf(data = world_data) +
-  add_lines_to_labels(data = world_data, width = 1, height = 1)
+  add_lines_to_labels(data = world_data)
 
 }

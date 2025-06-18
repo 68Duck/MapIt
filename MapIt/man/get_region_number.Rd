@@ -4,7 +4,13 @@
 \alias{get_region_number}
 \title{Returns the country number based off the csv file}
 \usage{
-get_region_number(region, csv_path, distance = 3, method = "lv", basic = FALSE)
+get_region_number(
+  region,
+  csv_path,
+  distance = 3,
+  method = "qgram",
+  basic = FALSE
+)
 }
 \arguments{
 \item{region}{A string representing the region name to search for.}

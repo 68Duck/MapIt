@@ -5,19 +5,19 @@
 \title{Finds the closest rectangle in free space for a small countries
 information to be sotred in.}
 \usage{
-find_closest_rects(data, small_country_area, width, height)
+find_closest_rects(data, small_region_area, width, height, attribute = NULL)
 }
 \arguments{
 \item{data}{The map data which should include simple features information.}
-
-\item{small_country_area}{A value representing the threshold area below which
-countries are considered small.}
 
 \item{width}{The width of the free space the small countries
 should be assigned}
 
 \item{height}{The height of the free space the small countries
 should be assigned}
+
+\item{small_country_area}{A value representing the threshold area below which
+countries are considered small.}
 }
 \value{
 A data frame containing the closest rectangle for each small country.

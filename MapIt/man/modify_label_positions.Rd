@@ -7,17 +7,18 @@ area is too small}
 \usage{
 modify_label_positions(
   data,
-  small_country_area,
+  small_region_area,
   width,
   height,
   label_x = "label_x",
-  label_y = "label_y"
+  label_y = "label_y",
+  attribute = NULL
 )
 }
 \arguments{
 \item{data}{The map data which should include simple features information.}
 
-\item{small_country_area}{A value representing the threshold area below which
+\item{small_region_area}{A value representing the threshold area below which
 countries are considered small.}
 
 \item{width}{The width of the free space the small countries
@@ -26,9 +27,9 @@ should be assigned}
 \item{height}{The height of the free space the small countries
 should be assigned}
 
-\item{label_x}{The column name for the x-coordinate of country labels.}
+\item{label_x}{The column name for the x-coordinate of region labels.}
 
-\item{label_y}{The column name for the y-coordinate of country labels.}
+\item{label_y}{The column name for the y-coordinate of region labels.}
 }
 \value{
 A data frame containing the original
@@ -41,7 +42,7 @@ area is too small
 \examples{
 # Assuming `world_data` is a valid `sf` object containing world map data:
 modified_labels <- modify_label_positions(world_data,
-                                          small_country_area = 100000,
+                                          small_region_area = 100000,
                                           width = 1, height = 1)
 
 }

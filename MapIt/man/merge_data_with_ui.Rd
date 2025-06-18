@@ -12,7 +12,7 @@ merge_data_with_ui(
   auxiliary_region_name,
   csv_path,
   distance = 3,
-  method = "lv"
+  method = "qgram"
 )
 }
 \arguments{
