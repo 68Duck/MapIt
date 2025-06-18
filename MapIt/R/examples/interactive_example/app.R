@@ -78,7 +78,7 @@ server <- function(input, output) {
         
         map <- choropleth(data = data, fill = pop_est,
                         legend_title = "Population") +
-            add_lines_to_labels(data = data, width = width, height = height) +
+            add_lines_to_labels(data = data) +
             add_bar_charts(data, width, height,
                           c("Agricultural (%)", "Industrial (%)", "Service (%)"),
                           "GDP by sector")
@@ -92,7 +92,7 @@ server <- function(input, output) {
                                        width, height)
         map <- choropleth(data = data, fill = data$pop_rank,
                         legend_title = "Population rank") +
-            add_lines_to_labels(data = data, width = width, height = height) +
+            add_lines_to_labels(data = data) +
             add_pie_charts(data, "label_x", "label_y", c("name_len", "pop_rank"),
                             "Name vs Pop", pie_scale)
         return (map)

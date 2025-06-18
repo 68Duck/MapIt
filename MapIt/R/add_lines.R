@@ -235,12 +235,12 @@ modify_label_positions <- function(data, small_region_area, width, height,
 #'                                      width = 1, height = 1) +
 #' plot_with_lines <- ggplot() +
 #'   geom_sf(data = world_data) +
-#'   add_lines_to_labels(data = world_data, width = 1, height = 1)
+#'   add_lines_to_labels(data = world_data)
 #'
 #' @import ggplot2
 #' @import sf
 #' @export
-add_lines_to_labels <- function(data, width, height) {
+add_lines_to_labels <- function(data) {
   if ("region_point.X" %in% colnames(data) &&
       "region_point.Y" %in% colnames(data) &&
       "rectangle_point.X" %in% colnames(data) &&

@@ -14,7 +14,7 @@ pie_scale <- 1.5
 
 data <- modify_label_positions(data, small_country_area, width, height)
 map <- choropleth(data, data$pop_rank, "Population rank") +
-  add_lines_to_labels(data, width, height) +
+  add_lines_to_labels(data) +
   add_pie_charts(data, "label_x", "label_y", c("name_len", "pop_rank"),
                  "Name vs Pop", pie_scale)
 
