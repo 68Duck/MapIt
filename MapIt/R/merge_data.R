@@ -164,6 +164,9 @@ merge_data_with_csv <- function(region_data, auxiliary_data,
 #' @examples
 #' merged_data <- merge_data_with_ui(country_data, auxiliary_data,
 #'                                   "country", "country_name", csv_path)
+#' 
+#' @import here 
+#' 
 #' @export
 merge_data_with_ui <- function(region_data, auxiliary_data,
                                region_name,

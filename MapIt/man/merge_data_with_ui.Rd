@@ -43,4 +43,5 @@ and prompts user input if the regions cannot be allocated automatically.
 \examples{
 merged_data <- merge_data_with_ui(country_data, auxiliary_data,
                                   "country", "country_name", csv_path)
+
 }
