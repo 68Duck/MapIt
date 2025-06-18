@@ -25,4 +25,5 @@ unwanted characters.
 \examples{
 converted_data <- convert_columns_to_number(data,
  columns = c("population", "gdp"), characters_to_remove = c("$", "\%"))
+
 }

@@ -300,6 +300,8 @@ save_to_csv <- function(regions, csv_path) {
 #' @examples
 #' converted_data <- convert_columns_to_number(data,
 #'  columns = c("population", "gdp"), characters_to_remove = c("$", "%"))
+#' 
+#' @export
 convert_columns_to_number <- function(data, columns, characters_to_remove) {
   for (column in columns) {
     data[[column]] <- gsub(",", "", data[[column]])
