@@ -25,4 +25,5 @@ if it is less than a threshold.
 }
 \examples{
 is_closer <- distance_lesser_than("germany", "germnay", 3)
+
 }

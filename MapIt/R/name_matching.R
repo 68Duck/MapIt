@@ -2,26 +2,6 @@ library(stringdist)
 library(purrr)
 library(here)
 
-# csv_data <<- read.csv(here("countryNames.csv"), header = FALSE)
-
-# #' Creates a mapping from country names to numbers
-# #'
-# #' @return A map of country names to numbers
-# #' @import stringdist
-# #' @examples
-# #' country_map <- create_country_map()
-# create_region_map <- function() {
-#   data <- csv_data
-#   region_map <- list()
-#   for (i in 1:nrow(data)) {
-#     for (j in 1:ncol(data)) {
-#       country_name <- tolower(data[i, j])
-#       country_map[[country_name]] <- i
-#     }
-#   }
-#   country_map
-# }
-
 
 #' Returns the country number based off the levenstein distance being
 #' less than x
@@ -34,12 +14,12 @@ library(here)
 #' @param region A string representing the region name to search for.
 #' @param x A numeric threshold for the Levenshtein distance.
 #' @param method A string representing the edit distance method
-#' 
 #'
 #' @return The row index of the closest matching country
 #'         if found; otherwise, -1.
 #' @examples
 #' country_number <- get_country_number_with_edit_distance("germany", 3)
+#' 
 #' @export
 get_region_number_with_edit_distance <- function(country, distance,
                                                  csv_path, method = "qgram") {
@@ -142,6 +122,9 @@ get_region_from_map <- function(region, csv_path) {
 #' @return TRUE if the distance is less than `x`; otherwise, FALSE.
 #' @examples
 #' is_closer <- distance_lesser_than("germany", "germnay", 3)
+#'
+#' @import stringdist
+#'
 #' @export
 distance_lesser_than <- function(str1, str2, x, method = "qgram") {
   valid_methods <- c("osa", "lv", "dl", "hamming",

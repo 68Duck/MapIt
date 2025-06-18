@@ -31,4 +31,5 @@ index of the matching row which is the country number.
 }
 \examples{
 country_number <- get_country_number_with_edit_distance("germany", 3)
+
 }
